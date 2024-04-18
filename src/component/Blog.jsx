@@ -1,31 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import {PostContext} from '../store/PostContext';
 
 
 export default function Blog() {
 
-  const [post, setPost] = useState([]);
-  const [loading, setLoading] = useState(true)
-
-
-  useEffect(() =>{
-  const dataFectch = () => {
-    fetch('https://dummyjson.com/quotes').then(response =>{
-      if(!response.ok){
-        console.log(error);
-      }
-      return response.json();
-    }).then( data =>{
-      setPost(data.quotes);
-      console.log('data are:',post)
-    })
-  };
-  dataFectch();
-
-}, []);
-    
-
+const {post} = useContext(PostContext);
+   
+console.log('context',post)
   return (
    <>
+   <h3>Following data are coming from Context Api</h3>
+  
    <ul>
    {
     post.map(item =>(
