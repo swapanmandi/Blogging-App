@@ -6,7 +6,6 @@ export default function Blog() {
 
 const {post} = useContext(PostContext);
    
-console.log('context',post)
   return (
    <>
    <h3>Following data are coming from Context Api</h3>

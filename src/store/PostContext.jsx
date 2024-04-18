@@ -26,9 +26,6 @@ const  PostContextProvider = ({children}) => {
 
 }, []);
 
-
-  //  const name = 'SWAPAN MANDI';
-  //  const sm = "hi";
     return(
     <PostContext.Provider value={{post}}>
     {children}
