@@ -7,8 +7,12 @@ import Dashboard from './admin/Dashboard.jsx'
 import Signup from './admin/Signup.jsx'
 import Login from './admin/Login.jsx'
 import Blog from './component/Blog.jsx'
-import Post from './admin/Post.jsx'
+import CreatePost from './admin/CreatePost.jsx'
 import Error from './component/Error.jsx'
+import Home from './component/Home.jsx'
+import Latest from './pages/Latest.jsx'
+import Post from './pages/Post.jsx'
+
 
 const router = createBrowserRouter([
   {
@@ -18,7 +22,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Blog />
+        element: <Home />
       },
       {
         path: "/blogs",
@@ -26,7 +30,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/latest",
-        element: <h1>Latest Page</h1>
+        element: <Latest />
       },
       {
         path: "/contact",
@@ -36,6 +40,10 @@ const router = createBrowserRouter([
         path: "/about",
         element: <h1>About Page</h1>,
       },
+      {
+        path: "/latest/post/:postId",
+        element: <Post />
+      }
       
     ]
 },
@@ -46,7 +54,7 @@ const router = createBrowserRouter([
   children : [
     {
       path: "/dashboard",
-      element: <Post />
+      element: <CreatePost />
     },
     {
       path: "/dashboard/signup",
@@ -55,10 +63,6 @@ const router = createBrowserRouter([
     {
       path: "/dashboard/login",
       element: <Login />
-    },
-    {
-      path: "/dashboard/creat-post",
-      element: <Post />
     }
   ]
 },
