@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { PostContext } from "../store/PostContext";
+import { PostContext } from "../store/PostContext-store";
 
 export default function Blog() {
   const { post } = useContext(PostContext);
@@ -28,7 +28,7 @@ export default function Blog() {
 
   return (
     <>
-    <div className=" text-slate-100 w-full min-h-screen flex flex-col items-center">
+    <article className=" text-slate-100 h-screen flex flex-col items-center">
       <h3>Following data are coming from Context Api</h3>
       {loading ? (
         <h1>Loading...</h1>
@@ -40,7 +40,7 @@ export default function Blog() {
         </ul>
       )}
 
-      <div className=" w-full h-8 bg-slate-200 text-red-900 flex justify-center">
+      <div className=" w-full h-8 bg-red-200 text-red-900 flex justify-center">
        
      {
      
@@ -51,7 +51,7 @@ export default function Blog() {
           }
           
       </div>
-      </div>
+      </article>
     </>
   );
 }
