@@ -72,8 +72,10 @@ export default function PostList() {
                   src={`${item.image}`}
                 ></img>
                 <div className=" p-3">
-                  <span className=" bg-amber-400 rounded-md p-2 font-semibold">
-                    {item.tags}
+                  <span className=" flex font-semibold">
+                    {item.tags.map(item=>(
+                      <h3 className="bg-amber-400 rounded-md p-2 w-fit m-1">{item}</h3>
+                    ))}
                   </span>
                   <div className=" p-4">
                     <h1 className=" text-xl font-semibold p-3">{item.title}</h1>
@@ -85,6 +87,7 @@ export default function PostList() {
                   </div>
                   <p>{item.body}</p>
                   <h3 className=" font-semibold">Read More</h3>
+                 
                 </div>
               </div>
             </Link>
