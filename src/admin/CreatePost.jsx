@@ -16,14 +16,13 @@ export default function Post() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/create-post", postData)
-      console.log('Response', response.data)
-      alert(response.data.message)
+      const response = await axios.post('/api/create-post', postData);
+      console.log("Response", response.data);
+      alert(response.data.message);
     } catch (error) {
       console.error("Error to post", error);
-      alert('Error to post data')
+      alert("Error to post data");
     }
-
   };
 
   //update properties values
@@ -43,8 +42,14 @@ export default function Post() {
         <h1 className=" font-bold m-4">Create New Blog</h1>
         <div className=" flex flex-col">
           <form onSubmit={handleSubmit}>
-            <label>Id:
-              <input type="number" name="id" value={postData.id}></input>
+            <label>
+              Id:
+              <input
+                type="number"
+                name="id"
+                value={postData.id}
+                onChange={postHandleChange}
+              ></input>
             </label>
             <p>Blog Title</p>
             <input
@@ -63,17 +68,13 @@ export default function Post() {
             ></textarea>
 
             <label>
-              Category
-              <select
+              userId
+              <input
+                type="number"
                 name="userId"
                 value={postData.userId}
                 onChange={postHandleChange}
-              >
-                <option value="">---</option>
-                <option value="tech">Tech</option>
-                <option value="travel">Travel</option>
-                <option value="blog">Blog</option>
-              </select>
+              ></input>
             </label>
             <label>
               Tags

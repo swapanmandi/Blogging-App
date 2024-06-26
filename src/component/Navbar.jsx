@@ -17,8 +17,10 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className=" bg-red-200 w-full h-16 items-center flex justify-evenly text-md text-blue-600">
-        <div className=" font-bold uppercase">Blogging App</div>
+      <nav className=" relative bg-lime-400 overflow-hidden w-screen h-16 items-center flex justify-evenly text-md text-blue-600">
+        <Link to="/">
+          <div className=" font-bold uppercase">Blogging App</div>
+        </Link>
         <ul className="flex font-semibold ">
           <li className="mx-[10px]">
             <Link to="/">Home</Link>
@@ -43,7 +45,7 @@ const Navbar = () => {
           <Link to="/dashboard">Admin</Link>{" "}
         </div>
 
-        <label class="inline-flex items-center cursor-pointer">
+        <label className="inline-flex items-center cursor-pointer">
           <input
             className="sr-only peer"
             type="checkbox"
@@ -51,8 +53,7 @@ const Navbar = () => {
             onChange={handleMode}
             checked={themeMode === "dark"}
           />
-          <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-         
+          <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
         </label>
       </nav>
     </>

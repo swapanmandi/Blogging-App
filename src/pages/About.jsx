@@ -3,7 +3,7 @@ import React from 'react'
 export default function() {
   return (
     <>
-    <div>
+    <div className=' sm:text-left md:text-center'>
         
 <div>
 

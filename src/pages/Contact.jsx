@@ -9,7 +9,7 @@ e.preventDefault();
   return (
     <>
       <div>
-        <div className=" items-center border dark:text-white">
+        <div className=" p-2 bg-fuchsia-400 md:items-center border dark:text-white">
           <form className=" m-5" onSubmit={handleSendBtn}>
             <h1>Contact Page</h1>
             <div className=" flex flex-col items-center text-center">
@@ -29,10 +29,10 @@ e.preventDefault();
                   type="email"
                 ></input>
               </label>
-              <label className=" flex">
+              <label className="flex-col md:flex">
                 Message:
                 <textarea
-                  className=' p-1 m-2 rounded-md w-96 h-60 dark:bg-slate-950'
+                  className=' w-80 p-1 m-2 rounded-md md:w-96 h-60 dark:bg-slate-950'
                   placeholder="Your Message"
                   type="text"
                 ></textarea>

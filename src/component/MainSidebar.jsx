@@ -30,9 +30,9 @@ export default function MainSidebar({ date = new Date() }) {
         </div>
         </div>
       ) : (
-        <div className=" w-4/12 m-4 rounded-xl">
+        <div className=" sm:text-blue-800 md:text-orange-500 lg:text-lime-400 md:w-1/3">
           <aside className=" bg-white dark:bg-slate-950 min-h-screen p-3 rounded-md">
-            <div className=" text-red-500 text-wrap">
+            <div className=" text-wrap">
               <h2 className="  bg-orange-300 font-semibold rounded-md p-1 w-fit">
                 Trending Posts
               </h2>

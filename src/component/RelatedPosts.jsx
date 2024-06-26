@@ -14,7 +14,7 @@ export default function () {
         <div className="flex">
         {
             relatedPosts.map(item => (
-                <Link to={`/relatedPosts/${item.id}`}>
+                <Link to={`/related-posts/${item.id}`}>
         <div className=" bg-white dark:bg-slate-950 dark:text-white w-[260px] h-[320px] p-2 m-2 rounded-md">
             <img className="w-[230px] h-[160px] rounded-md" src={item.image}></img>
             <h1>{item.title}</h1>

@@ -6,13 +6,14 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Dashboard from './admin/Dashboard.jsx'
 import Signup from './admin/Signup.jsx'
 import Login from './admin/Login.jsx'
-import Blog from './component/Blog.jsx'
+import Blog from './pages/Blog.jsx'
 import CreatePost from './admin/CreatePost.jsx'
 import Error from './component/Error.jsx'
-import Home from './component/Home.jsx'
+import Home from './pages/Home.jsx'
 import Latest from './pages/Latest.jsx'
-import Post from './pages/Post.jsx'
-
+import PostDetails from './pages/PostDetails.jsx'
+import Contact from './pages/Contact.jsx'
+import About from './pages/About.jsx'
 
 const router = createBrowserRouter([
   {
@@ -34,17 +35,28 @@ const router = createBrowserRouter([
       },
       {
         path: "/contact",
-        element: <h1>Contact Page</h1>
+        element: <Contact />
       },
       {
         path: "/about",
-        element: <h1>About Page</h1>,
+        element: <About />
       },
       {
-        path: "/latest/post/:postId",
-        element: <Post />
+        path: "/latest/:postId",
+        element: <PostDetails />
       }
-      
+      ,{
+        path: '/blogs/:postId',
+        element: <PostDetails />
+      },
+      {
+        path: '/related-posts/:postId',
+        element: <PostDetails />
+      }
+      ,{
+        path: '/trending-posts/:postId',
+        element: <PostDetails />
+      }
     ]
 },
 {

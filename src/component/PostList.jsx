@@ -45,7 +45,7 @@ export default function PostList() {
       {loading ? (
         [...Array(5)].map((_, index) => (
           <div
-            className="bg-white flex dark:bg-slate-950 dark:text-white p-4 text-md m-4 rounded-xl"
+            className= " flex flex-col md:flex bg-white dark:bg-slate-950 dark:text-white p-4 text-md m-4 rounded-xl"
             key={index}
           >
             <Skeleton width={324} height={281} />
@@ -63,15 +63,15 @@ export default function PostList() {
           </div>
         ))
       ) : (
-        <div className=" flex flex-col items-center">
+        <div className="flex flex-col lg:items-center">
           {currentItems.map((item) => (
             <Link to={`blogs/${item.id}`} key={item.id}>
-              <div className="  bg-white flex dark:bg-slate-950 dark:text-white p-4 text-md m-4 rounded-xl">
+              <div className="flex flex-col lg:flex lg:flex-row p-4 text-md m-4 rounded-xl bg-white xs:text-red-500 dark:bg-slate-950 dark:text-white lg:text-green">
                 <img
                   className=" w-[324px] h-[281px]"
                   src={`${item.image}`}
                 ></img>
-                <div className=" p-3">
+                <div className=" lg:flex lg:flex-col p-3">
                   <span className=" flex font-semibold">
                     {item.tags.map(item=>(
                       <h3 className="bg-amber-400 rounded-md p-2 w-fit m-1">{item}</h3>
