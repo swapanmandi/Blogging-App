@@ -9,7 +9,7 @@ export default function Post() {
   const { posts } = useContext(PostContext);
   const [data, setData] = useState(posts);
   const [currDate, setCurrDate] = useState(new Date());
-
+  const [viewComment, setViewComment] = useState(false);
   const { postId } = useParams();
   const location = useLocation();
   const newUrl = location.pathname.split("/")[1];
@@ -29,6 +29,16 @@ export default function Post() {
 
   console.log("url:", location.pathname);
 
+  const clickCommentHandler = () => {
+    if (viewComment) {
+      setViewComment(false);
+    } else {
+      setViewComment(true);
+    }
+  };
+
+  console.log('commt', viewComment)
+
   return (
     <>
       <div className="flex">
@@ -45,19 +55,26 @@ export default function Post() {
 
               <div className=" p-4">
                 <h1 className=" text-xl font-semibold p-3">{item.title}</h1>
-                <span className=" p-3">📅 {currDate.toLocaleDateString()}</span>
+                <span className=" p-3">📅 {item.publishedAt}</span>
                 <span className="p-3">👨 Admin</span>
-                <span>👍{item.likes?.length}</span>
-                <span>↪️{item.shares?.length}</span>
-                <span className="p-3">💬 {item.comments?.length}</span>
               </div>
               <p>{item.body}</p>
-              <div>
-                <h3 className=" font-semibold">Comments</h3>
-                {item.comments?.map((item) => (
-                  <p>{item.comment}</p>
-                ))}
+              <div className=" m-3">
+                <span className=" p-3">👍{item.likes?.length}</span>
+                <span className=" p-3">↪️{item.shares?.length}</span>
+                <span className="p-3 cursor-pointer" onClick={clickCommentHandler}> 💬 {item.comments?.length}</span>
               </div>
+{ viewComment &&
+              <div className=" m-3 p-1 border-slate-400 border-2 rounded-md">
+                <h3 className=" font-semibold p-3">Comments</h3>
+                {item.comments?.length ?
+              (item.comments?.map((item) => (
+                  <div className="flex items-center">
+                    {item.userId}:<p className=" p-3">{item.comment}</p>
+                  </div>
+                ))) : "No Comments!" }
+              </div>
+}
             </div>
           ))}
 
