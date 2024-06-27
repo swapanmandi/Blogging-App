@@ -9,7 +9,6 @@ export default function Post() {
   const { posts } = useContext(PostContext);
   const [data, setData] = useState(posts);
   const [currDate, setCurrDate] = useState(new Date());
- 
 
   const { postId } = useParams();
   const location = useLocation();
@@ -28,9 +27,7 @@ export default function Post() {
     nevigate(`/${newUrl}/${id}`);
   };
 
-
- console.log('url:',location.pathname)
-
+  console.log("url:", location.pathname);
 
   return (
     <>
@@ -40,18 +37,27 @@ export default function Post() {
             <div className="" key={item.id}>
               <img className=" w-[760px] h-[490px] mb-5" src={item.image}></img>
               <span className=" bg-orange-400 rounded-lg p-1">{item.tags}</span>
-                
-               
-               <SocialShare url={`http://localhost:5173/${location.pathname}`} title={item.title}/>
-               
-             
+
+              <SocialShare
+                url={`http://localhost:5173/${location.pathname}`}
+                title={item.title}
+              />
+
               <div className=" p-4">
                 <h1 className=" text-xl font-semibold p-3">{item.title}</h1>
                 <span className=" p-3">📅 {currDate.toLocaleDateString()}</span>
                 <span className="p-3">👨 Admin</span>
-                <span className="p-3">💬 0</span>
+                <span>👍{item.likes?.length}</span>
+                <span>↪️{item.shares?.length}</span>
+                <span className="p-3">💬 {item.comments?.length}</span>
               </div>
               <p>{item.body}</p>
+              <div>
+                <h3 className=" font-semibold">Comments</h3>
+                {item.comments?.map((item) => (
+                  <p>{item.comment}</p>
+                ))}
+              </div>
             </div>
           ))}
 
