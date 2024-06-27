@@ -45,7 +45,7 @@ export default function PostList() {
       {loading ? (
         [...Array(5)].map((_, index) => (
           <div
-            className= " flex flex-col md:flex bg-white dark:bg-slate-950 dark:text-white p-4 text-md m-4 rounded-xl"
+            className= " flex flex-col bg-white dark:bg-slate-950 dark:text-white p-4 text-md m-2 rounded-xl"
             key={index}
           >
             <Skeleton width={324} height={281} />
@@ -83,7 +83,9 @@ export default function PostList() {
                       📅 {currDate.toLocaleDateString()}
                     </span>
                     <span className="p-3">👨 Admin</span>
-                    <span className="p-3">💬 0</span>
+                    <span>👍{item.likes?.length}</span>
+                <span>↪️{item.shares?.length}</span>
+                <span className="p-3">💬 {item.comments?.length}</span>
                   </div>
                   <p>{item.body}</p>
                   <h3 className=" font-semibold">Read More</h3>
