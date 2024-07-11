@@ -42,7 +42,7 @@ const Navbar = () => {
         </ul>
         <div className=" font-bold bg-red-300 p-1 px-3 rounded-md">
           {" "}
-          <Link to="/dashboard">Admin</Link>{" "}
+          <Link to="/admin">Admin</Link>{" "}
         </div>
 
         <label className="inline-flex items-center cursor-pointer">

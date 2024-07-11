@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import Dashboard from './admin/Dashboard.jsx'
+import AdminHome from './admin/Home.jsx'
 import Signup from './admin/Signup.jsx'
 import Login from './admin/Login.jsx'
 import Blog from './pages/Blog.jsx'
@@ -14,6 +14,11 @@ import Latest from './pages/Latest.jsx'
 import PostDetails from './pages/PostDetails.jsx'
 import Contact from './pages/Contact.jsx'
 import About from './pages/About.jsx'
+import ProtectedRoute from "../src/admin/ProtectedRoute.jsx"
+import { AuthProvider } from '../src/admin/store/AuthProvider.jsx'
+import Dashboard from './admin/Dashboard.jsx'
+
+
 
 const router = createBrowserRouter([
   {
@@ -60,21 +65,28 @@ const router = createBrowserRouter([
     ]
 },
 {
-  path: "/dashboard",
-  element: <Dashboard />,
+  path: "/admin",
+  element: <AdminHome />,
   errorElement: <Error />,
   children : [
     {
-      path: "/dashboard",
-      element: <CreatePost />
+      path: "/admin",
+  element: <Signup />
     },
     {
-      path: "/dashboard/signup",
+      path: "/admin/dashboard",
+      element: <ProtectedRoute><Dashboard /> </ProtectedRoute>
+    },
+    {
+      path: "/admin/signup",
       element: <Signup />
     },
     {
-      path: "/dashboard/login",
+      path: "/admin/login",
       element: <Login />
+    },{
+      path: "/admin/dashboard/create-post",
+      element: <CreatePost />
     }
   ]
 },
@@ -83,6 +95,9 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <AuthProvider>
     <RouterProvider router={router} />
+    </AuthProvider>
+   
   </React.StrictMode>,
 )

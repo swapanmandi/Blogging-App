@@ -45,7 +45,7 @@ export default function PostList() {
       {loading ? (
         [...Array(5)].map((_, index) => (
           <div
-            className= " flex flex-col bg-white dark:bg-slate-950 dark:text-white p-4 text-md m-2 rounded-xl"
+            className=" flex flex-col bg-white dark:bg-slate-950 dark:text-white p-4 text-md m-2 rounded-xl"
             key={index}
           >
             <Skeleton width={324} height={281} />
@@ -65,34 +65,30 @@ export default function PostList() {
       ) : (
         <div className="flex flex-col lg:items-center">
           {currentItems.map((item) => (
-            <Link to={`blogs/${item.id}`} key={item.id}>
-              <div className="flex flex-col lg:flex lg:flex-row p-4 text-md m-4 rounded-xl bg-white xs:text-red-500 dark:bg-slate-950 dark:text-white lg:text-green">
-                <img
-                  className=" w-[324px] h-[281px]"
-                  src={`${item.image}`}
-                ></img>
-                <div className=" lg:flex lg:flex-col p-3">
-                  <span className=" flex font-semibold">
-                    {item.tags.map(item=>(
-                      <h3 className="bg-amber-400 rounded-md p-2 w-fit m-1">{item}</h3>
-                    ))}
-                  </span>
-                  <div className=" p-4">
-                    <h1 className=" text-xl font-semibold p-3">{item.title}</h1>
-                    <span className=" p-3">
-                      📅 {currDate.toLocaleDateString()}
-                    </span>
-                    <span className="p-3">👨 Admin</span>
-                    <span>👍{item.likes?.length}</span>
-                <span>↪️{item.shares?.length}</span>
-                <span className="p-3">💬 {item.comments?.length}</span>
-                  </div>
-                  <p>{item.body}</p>
-                  <h3 className=" font-semibold">Read More</h3>
-                 
+            <div className="flex flex-col lg:flex lg:flex-row p-4 text-md m-4 rounded-xl bg-white xs:text-red-500 dark:bg-slate-950 dark:text-white lg:text-green">
+              <img className=" w-[324px] h-[281px]" src={`${item.image}`}></img>
+              <div className=" lg:flex lg:flex-col p-3">
+                <span className=" flex font-semibold">
+                  {item.tags.map((item) => (
+                    <h3 className="bg-amber-400 rounded-md p-2 w-fit m-1">
+                      {item}
+                    </h3>
+                  ))}
+                </span>
+                <div className=" p-4">
+                  <h1 className=" text-xl font-semibold p-3">{item.title}</h1>
+                  <span className=" p-3">📅 {item.publishedAt}</span>
+                  <span className="p-3">👨 Admin</span>
+                  <span className=" p-3">👍{item.likes?.length}</span>
+                  <span className=" p-3">↪️{item.shares?.length}</span>
+                  <span className="p-3">💬 {item.comments?.length}</span>
                 </div>
+                <Link to={`blogs/${item.id}`} key={item.id}>
+                  <p className=" line-clamp-4">{item.body}</p>
+                  <h3 className=" font-semibold">Read More</h3>
+                </Link>
               </div>
-            </Link>
+            </div>
           ))}
 
           <div className=" w-fit p-2 m-4 dark:text-white">

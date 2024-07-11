@@ -11,7 +11,7 @@ export default function MainSidebar({ date = new Date() }) {
   return (
     <>
       {loading ? (
-         <div className=" w-4/12 m-4 rounded-xl">
+         <div className=" w-4/12 m-2 rounded-xl">
         <div className=" bg-white dark:bg-slate-950 min-h-screen p-3 rounded-md">
          <Skeleton height={30} width={100} /> 
          {
@@ -30,7 +30,7 @@ export default function MainSidebar({ date = new Date() }) {
         </div>
         </div>
       ) : (
-        <div className=" sm:text-blue-800 md:text-orange-500 lg:text-lime-400 md:w-1/3">
+        <div className="text-orange-500 lg:w-1/3">
           <aside className=" bg-white dark:bg-slate-950 min-h-screen p-3 rounded-md">
             <div className=" text-wrap">
               <h2 className="  bg-orange-300 font-semibold rounded-md p-1 w-fit">

@@ -1,14 +1,13 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import CreatePost from "./CreatePost.jsx";
+
 
 export default function Dashboard() {
   return (
     <>
-      <Navbar />
-      <Outlet />
-      <Footer />
+      <div className="bg-gray-700 h-full w-screen">
+      <CreatePost />
+    </div>
     </>
   );
 }
