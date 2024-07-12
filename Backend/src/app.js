@@ -1,7 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import chatRoter from './routes/user.route.js'
+import userRoter from './routes/user.route.js'
+import blogRouter from './routes/blog.route.js'
 
 const app = express()
 
@@ -29,7 +30,7 @@ app.use((err, req, res, next) => {
   });
 
 
-app.use("/", chatRoter)
-
+app.use("/", userRoter)
+app.use("/blog", blogRouter)
 
 export {app}
