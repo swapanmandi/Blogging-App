@@ -5,48 +5,99 @@ import Button from "./Button.jsx";
 import Input from "./Input.jsx";
 import Select from "./Select.jsx";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
-export default function CreatePost({ post }) {
-  
+export default function CreatePost() {
+  const [post, setPost] = useState(null);
 
+  const { id } = useParams();
 
-  const { register, handleSubmit, watch, setValue, control, getValues } = useForm({
-    defaultValues: {
-      title: post?.title || "",
-      slug: post?.slug || "",
-      description: post?.description || "",
-      category: post?.category || "",
-      image: post?.image || "",
-      status: post?.status || "active",
-    },
-  });
+  useEffect(() => {
+    const editPost = async (req, res) => {
+      const response = await axios.get(
+        `http://localhost:3000/blog/api/editView/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      //console.log("data", response.data.data);
+      setPost(response.data.data);
+    };
+    editPost();
+  }, [id]);
+
+  const { register, handleSubmit, watch, setValue, control, getValues, reset } =
+    useForm({
+      defaultValues: {
+        title: "",
+        slug: "",
+        content: "",
+        description: "",
+        category: "",
+        //featuredImage: "",
+        status: "active",
+      },
+    });
+
+  useEffect(() => {
+    if (post) {
+      reset({
+        title: post.title,
+        slug: post.slug,
+        content: post.content,
+        description: post.description,
+        category: post.category,
+        featuredImage: post.featuredImage,
+        status: post.status,
+      });
+    }
+  }, [post, reset]);
 
   const submit = async (data) => {
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("slug", data.slug);
+    formData.append("description", data.description);
     formData.append("content", data.content);
     formData.append("category", data.category);
+    formData.append("status", data.status);
     //formData.append("tags", JSON.stringify(data.tags));
-    if (data.image[0]) {
-      formData.append("image", data.image[0]);
+    if (data.featuredImage[0]) {
+      formData.append("featuredImage", data.featuredImage[0]);
     }
+
+    console.log("data", formData.get("featuredImage"));
+
+    const blogData = {
+      title: formData.get("title"),
+      slug: formData.get("slug"),
+      description: formData.get("description"),
+      content: formData.get("content"),
+      category: formData.get("category"),
+      featuredImage: formData.get("featuredImage"),
+      status: formData.get("status"),
+    };
 
     try {
       if (post) {
-        await axios.put(`http://localhost:8000/updatePost/${post.id}`, formData, {
+        await axios.put(`http://localhost:3000/blog/api/edit/${id}`, blogData, {
           withCredentials: true,
         });
       } else {
-        await axios.post("http://localhost:8000/createPost", formData, {
-          withCredentials: true,
-        });
+        await axios.post(
+          "http://localhost:3000/blog/api/createBlog",
+          blogData,
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+           }
+        );
       }
     } catch (error) {
       console.log("Error submitting post", error);
     }
-
-    console.log(data)
   };
 
   const slugTransform = useCallback((value) => {
@@ -70,17 +121,12 @@ export default function CreatePost({ post }) {
     return () => sub.unsubscribe();
   }, [watch, slugTransform, setValue]);
 
-
-
-
-  
   //   const addTag = (tag) => {
   //     tag.preventDefault()
   //     if (tag && !tags.includes(tag.trim())) {
   //       setTags([...tags, tag.trim()]);
   //     }
   //   };
-  
 
   // const removeTag = (tag) => {
   //   const currentTags = getValues("tags");
@@ -94,7 +140,10 @@ export default function CreatePost({ post }) {
     <>
       <div className="flex flex-col p-3 text-white">
         <div>
-          <form className="flex w-9/12 flex-col" onSubmit={handleSubmit(submit)}>
+          <form
+            className="flex w-9/12 flex-col"
+            onSubmit={handleSubmit(submit)}
+          >
             <Input
               label="Title:"
               className="bg-slate-800"
@@ -125,7 +174,7 @@ export default function CreatePost({ post }) {
             />
 
             <Select
-            label="Category:"
+              label="Category:"
               {...register("category", { required: true })}
               options={["Category1", "Category2", "Category3"]}
             />
@@ -153,14 +202,14 @@ export default function CreatePost({ post }) {
               label="Featured Image:"
               type="file"
               accept="image/png, image/jpg, image/jpeg, image/gif"
-              {...register("image", { required: !post })}
+              {...register("featuredImage")}
             />
 
-            {post && post.image && (
+            {/* {post && post.image && (
               <div>
                 <img src={post.image} alt="" />
               </div>
-            )}
+            )} */}
 
             <Select
               options={["active", "inactive"]}

@@ -2,14 +2,30 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Blog } from "../models/blog.model.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
+// ad create post
 
 const createBlog = asyncHandler(async (req, res) => {
-  const { title, slug, description, content, featuredImage, category, status } =
-    req.body;
+  const { title, slug, description, content, category, status } = req.body;
+
+  console.log("data", req.body);
+
   if ([title, slug, content].some((item) => item.trim() === "")) {
     throw new ApiError(400, "Field can not be empty.");
   }
+
+  //upload Fimage
+let featuredImageLocalPath;
+  if(req.files && Array.isArray(req.files.featuredImage) && req.files.featuredImage.length > 0){
+    featuredImageLocalPath = req.files?.featuredImage[0]?.path;
+    
+  }
+  
+  const uploadFeaturedImage = await uploadOnCloudinary(featuredImageLocalPath);
+  console.log("fimage", featuredImageLocalPath)
+
+  console.log("upload cloudi", uploadFeaturedImage)
 
   const blog = await Blog.create({
     user: req.user,
@@ -17,7 +33,7 @@ const createBlog = asyncHandler(async (req, res) => {
     slug,
     description,
     content,
-    featuredImage,
+    featuredImage: uploadFeaturedImage?.url || "",
     category,
     status,
   });
@@ -33,20 +49,37 @@ const createBlog = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdBlog, "data saved successfully."));
 });
 
-// fetch blog
+// ad list post
 
-const getBlog = asyncHandler(async (req, res) => {
+const editList = asyncHandler(async (req, res) => {
   const { id: id } = req.params;
-  const blog = await Blog.findOne({ _id: id });
 
+  const blog = await Blog.find({ user: req.user._id });
   if (!blog) {
-    throw new ApiError(404, "The blog is unavilable");
+    throw new ApiError(400, "Error to find and edit blog");
   }
 
-  res.status(200).json(new ApiResponse(200, blog, "Blog fetched successfully"));
+  res
+    .status(200)
+    .json(new ApiResponse(200, blog, "Blog edit list fetched successfully."));
 });
 
-//edit blog
+// ad view post
+
+const editView = asyncHandler(async (req, res) => {
+  const { id: id } = req.params;
+
+  const blog = await Blog.findOne({ _id: id });
+  if (!blog) {
+    throw new ApiError(400, "Error to find and edit blog");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, blog, "Blog edit list fetched successfully."));
+});
+
+//ad edit blog
 
 const editBlog = asyncHandler(async (req, res) => {
   const { id: id } = req.params;
@@ -65,7 +98,53 @@ const editBlog = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, blog, "Blog edit successfully."));
 });
 
+// ad delete post
 
+const deletePost = asyncHandler(async (req, res) => {
+  const { id: id } = req.params;
+  const result = await Blog.deleteOne({ _id: id });
 
+  if (result.deletedCount === 0) {
+    throw new ApiError(404, "Thre is no post or error to delete");
+  }
 
-export { createBlog, getBlog, editBlog };
+  res.status(200).json(new ApiResponse(200, {}, "Post delete sucessfully."));
+});
+
+//pub fetch all blog
+
+const getBlogList = asyncHandler(async (req, res) => {
+  const blogs = await Blog.find({}, "title");
+
+  if (!blogs) {
+    throw new ApiError(404, "There is no blogs or something went wrong.");
+  }
+
+  res
+    .status(200)
+
+    .json(new ApiResponse(200, blogs, "Blog list fetched succesfully"));
+});
+
+// pub fetch blog
+
+const getBlog = asyncHandler(async (req, res) => {
+  const { id: id } = req.params;
+  const blog = await Blog.findOne({ _id: id });
+
+  if (!blog) {
+    throw new ApiError(404, "The blog is unavilable");
+  }
+
+  res.status(200).json(new ApiResponse(200, blog, "Blog fetched successfully"));
+});
+
+export {
+  createBlog,
+  getBlog,
+  editBlog,
+  getBlogList,
+  editList,
+  editView,
+  deletePost,
+};
