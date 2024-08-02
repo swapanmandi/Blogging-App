@@ -6,7 +6,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 export default function PostList() {
   //for geting data
-  const { posts, loading } = useContext(PostContext);
+  const { loading, displayPost } = useContext(PostContext);
 
   const [currDate, setCurrDate] = useState(new Date());
 
@@ -15,6 +15,9 @@ export default function PostList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [peginateList, setPeginateList] = useState([]);
 
+
+
+
   const handlePeginate = (number) => {
     setCurrentPage(number);
     console.log("clicked");
@@ -22,9 +25,9 @@ export default function PostList() {
 
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
-  const currentItems = posts.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = displayPost.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(posts.length / itemPerPage);
+  const totalPages = Math.ceil(displayPost.length / itemPerPage);
   const peginatePages = Array.from(
     { length: totalPages },
     (_, index) => index + 1
@@ -39,6 +42,7 @@ export default function PostList() {
       setPeginateList(peginatePages.slice(currentPage - 3, currentPage + 2));
     }
   }, [currentPage, totalPages]);
+
 
   return (
     <>
@@ -64,16 +68,22 @@ export default function PostList() {
         ))
       ) : (
         <div className="flex flex-col lg:items-center">
-          {currentItems.map((item) => (
-            <div className="flex flex-col lg:flex lg:flex-row p-4 text-md m-4 rounded-xl bg-white xs:text-red-500 dark:bg-slate-950 dark:text-white lg:text-green">
-              <img className=" w-[324px] h-[281px]" src={`${item.image}`}></img>
+          {currentItems?.map((item) => (
+            <div
+              key={item._id}
+              className="flex flex-col lg:flex lg:flex-row p-4 text-md m-4 rounded-xl bg-white xs:text-red-500 dark:bg-slate-950 dark:text-white lg:text-green"
+            >
+              <img
+                className=" w-[324px] h-[281px]"
+                src={`${item.featuredImage}`}
+              ></img>
               <div className=" lg:flex lg:flex-col p-3">
                 <span className=" flex font-semibold">
-                  {item.tags.map((item) => (
-                    <h3 className="bg-amber-400 rounded-md p-2 w-fit m-1">
-                      {item}
-                    </h3>
-                  ))}
+                  {/* {item.tags.map((item) => (
+                <h3 className="bg-amber-400 rounded-md p-2 w-fit m-1">
+                  {item}
+                </h3>
+              ))} */}
                 </span>
                 <div className=" p-4">
                   <h1 className=" text-xl font-semibold p-3">{item.title}</h1>
@@ -83,14 +93,14 @@ export default function PostList() {
                   <span className=" p-3">↪️{item.shares?.length}</span>
                   <span className="p-3">💬 {item.comments?.length}</span>
                 </div>
-                <Link to={`blogs/${item.id}`} key={item.id}>
+                <Link to={`blogs/${item._id}`} key={item.id}>
                   <p className=" line-clamp-4">{item.body}</p>
                   <h3 className=" font-semibold">Read More</h3>
                 </Link>
               </div>
             </div>
           ))}
-
+          )
           <div className=" w-fit p-2 m-4 dark:text-white">
             <button
               disabled={currentPage === 1}
