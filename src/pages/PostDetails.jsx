@@ -1,36 +1,40 @@
 import React, { useContext, useEffect, useState } from "react";
 import { PostContext } from "../store/PostContext-store";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import MainSidebar from "../component/MainSidebar";
 import RelatedPosts from "../component/RelatedPosts";
 import SocialShare from "../component/SocialShare";
 import parse from "html-react-parser";
+import ShareModal from "../component/ShareModal.jsx";
+import axios from "axios";
 
 export default function Post() {
   const { posts } = useContext(PostContext);
   const [data, setData] = useState(posts);
   const [currDate, setCurrDate] = useState(new Date());
   const [viewComment, setViewComment] = useState(false);
+  const [isOpenedShareModal, setIsOpenedShareModel] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeStatus, setLikeStatus] = useState(isLiked);
+  const [totalLikes, setTotalLikes] = useState(0)
+
   const { postId } = useParams();
   const location = useLocation();
   const newUrl = location.pathname.split("/")[1];
 
   const nevigate = useNavigate();
 
-  console.log("posts", posts);
-
   useEffect(() => {
     setData(posts);
   }, [posts]);
 
   const viewPost = data.filter((item) => String(item._id) === postId);
-  const currentIndex = data.findIndex((item) => String(item.id) === postId);
+  const currentIndex = data.findIndex((item) => String(item._id) === postId);
 
-  const handlePostChange = (id) => {
-    nevigate(`/${newUrl}/${id}`);
-  };
+  const prevPost = data[currentIndex - 1];
+  const nextPost = data[currentIndex + 1];
 
-  console.log("url:", location.pathname);
+  const handleShareBtn = () => setIsOpenedShareModel(!isOpenedShareModal);
 
   const clickCommentHandler = () => {
     if (viewComment) {
@@ -40,8 +44,34 @@ export default function Post() {
     }
   };
 
-  console.log("commt", viewComment);
-  const sm = '<h1>swapan</h1>'
+  //like api
+
+  const postLike = async () => {
+    const like = await axios.post(
+      `http://localhost:3000/app/post/like/${postId}`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+    setLikeStatus(!likeStatus);
+  };
+
+  //fetch like status and number
+
+  useEffect(() => {
+    const handleLikeStatus = async () => {
+      const result = await axios.get(
+        `http://localhost:3000/app/post/liked/${postId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setIsLiked(result.data.data.status);
+      setTotalLikes(result.data.data.noOfLikes)
+    };
+    handleLikeStatus();
+  }, [postId]);
 
   return (
     <>
@@ -58,22 +88,36 @@ export default function Post() {
               <SocialShare
                 url={`http://localhost:5173/${location.pathname}`}
                 title={item.title}
+                onClose={handleShareBtn}
               />
 
               <div className=" p-4">
                 <h1 className=" text-xl font-semibold p-3">{item.title}</h1>
-                <span className=" p-3">📅 {item.publishedAt}</span>
+                <span className=" p-3">📅 {item.createddAt}</span>
+
                 <span className="p-3">👨 Admin</span>
               </div>
 
               {/* -------------content--------------- */}
-              <div>
-                {parse(item.content)}
-              </div>
-              
+              <div>{parse(item.content)}</div>
+
               <div className=" m-3">
-                <span className=" p-3">👍{item.likes?.length}</span>
-                <span className=" p-3">↪️{item.shares?.length}</span>
+                <span onClick={postLike} className=" p-3 cursor-pointer">
+                  {likeStatus || isLiked ? "💙" : "🤍"}
+                  {totalLikes}
+                </span>
+                <span className=" p-3 cursor-pointer" onClick={handleShareBtn}>
+                  ↪️{item.shares?.length}
+                </span>
+
+                {isOpenedShareModal && (
+                  <ShareModal
+                    postUrl={`http://localhost:5173/blogs/${item._id}`}
+                    postTitle={item.title}
+                    onClose={handleShareBtn}
+                  />
+                )}
+
                 <span
                   className="p-3 cursor-pointer"
                   onClick={clickCommentHandler}
@@ -98,21 +142,23 @@ export default function Post() {
           ))}
 
           <div className=" bg-red-500 rounded-md w-fit m-3">
-            <button
-              disabled={currentIndex === 0}
-              className="p-2 disabled:text-gray-400"
-              onClick={() => handlePostChange(String(Number(postId) - 1))}
-            >
-              Previous
-            </button>
+            <Link to={`/blogs/${prevPost?._id}`}>
+              <button
+                disabled={currentIndex === 0}
+                className="p-2 disabled:text-gray-400"
+              >
+                Previous
+              </button>
+            </Link>
 
-            <button
-              disabled={currentIndex === data.length - 1}
-              onClick={() => handlePostChange(String(Number(postId) + 1))}
-              className=" p-2 disabled:text-gray-400"
-            >
-              Next
-            </button>
+            <Link to={`/blogs/${nextPost?._id}`}>
+              <button
+                disabled={currentIndex === data.length - 1}
+                className=" p-2 disabled:text-gray-400"
+              >
+                Next
+              </button>
+            </Link>
           </div>
         </div>
 

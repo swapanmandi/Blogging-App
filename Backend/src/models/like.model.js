@@ -5,12 +5,17 @@ const likeSchema = new mongoose.Schema(
     post: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Blog",
-      required: true,
+      
     },
+    comment:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment"
+    },
+    
     likedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+     
     },
   },
   {
