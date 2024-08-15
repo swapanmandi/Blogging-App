@@ -16,17 +16,14 @@ export default function PostList() {
     endDate: "",
     sort: "",
   });
-
-  console.log("filteredposts", filteredPosts);
+  const [isGrid, setIsGrid] = useState(true);
+  const [itemPerPage, setItemPerPage] = useState(6);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [peginateList, setPeginateList] = useState([]);
 
   useEffect(() => {
     setFilteredPosts(displayPost);
   }, [displayPost]);
-
-  //for pegination
-  const [itemPerPage, setItemPerPage] = useState(5);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [peginateList, setPeginateList] = useState([]);
 
   const handlePeginate = (number) => {
     setCurrentPage(number);
@@ -36,8 +33,6 @@ export default function PostList() {
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const currentItems = filteredPosts?.slice(indexOfFirstItem, indexOfLastItem);
-
- 
 
   const totalPages = Math.ceil(filteredPosts.length / itemPerPage);
   const peginatePages = Array.from(
@@ -69,44 +64,40 @@ export default function PostList() {
     if (filter.category) {
       tempPosts = tempPosts.filter((item) => item.category === filter.category);
     }
-    
+
     if (filter.date) {
       tempPosts = tempPosts.filter(
         (item) =>
-          new Date(item.publishedAt).setHours(0,0,0,0) ===
-          new Date(filter.date).setHours(0,0,0,0)
+          new Date(item.publishedAt).setHours(0, 0, 0, 0) ===
+          new Date(filter.date).setHours(0, 0, 0, 0)
       );
     }
-    
+
     if (filter.startDate && filter.endDate) {
-      const start = new Date(filter.startDate).setHours(0,0,0,0);
+      const start = new Date(filter.startDate).setHours(0, 0, 0, 0);
       const end = new Date(filter.endDate).setHours(23, 59, 59, 999);
       tempPosts = tempPosts.filter((item) => {
-        const newPosts = new Date(item.publishedAt)
+        const newPosts = new Date(item.publishedAt);
         return newPosts >= start && newPosts <= end;
       });
     }
 
-     if (filter.sort === "asc") {
+    if (filter.sort === "asc") {
       tempPosts = tempPosts.sort((a, b) => a.title.localeCompare(b.title));
     } else if (filter.sort === "desc") {
       tempPosts = tempPosts.sort((a, b) => b.title.localeCompare(a.title));
     } else if (filter.sort === "latest") {
-      tempPosts = tempPosts.sort((a, b) => new Date(a.publishedAt) - new Date(b.publishedAt));
+      tempPosts = tempPosts.sort(
+        (a, b) => new Date(a.publishedAt) - new Date(b.publishedAt)
+      );
     } else if (filter.sort === "oldest") {
-      tempPosts = tempPosts.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+      tempPosts = tempPosts.sort(
+        (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
+      );
     }
 
     setFilteredPosts(tempPosts);
   };
-
-  useEffect(()=>{
-    
-  }, [filteredPosts, displayPost])
-
-  console.log("c i ", currentItems)
-
-  //console.log("da", new Date(filter.date).toDateString())
 
   const formatedDate = (e) => {
     const date = new Date(e);
@@ -116,20 +107,36 @@ export default function PostList() {
     return `${dd}-${mm}-${yyyy}`;
   };
 
+  const handleLayout = () => setIsGrid(!isGrid);
+
   return (
     <>
-      <div>
-        <div className=" bg-cyan-600 text-black rounded-md h-fit w-fit p-1">
-          {isOpenedFilter && (
-            <span onClick={handleFilterClose} className=" ">
-              X
-            </span>
-          )}
-          <h2 onClick={handleFilterOpen} className=" font-semibold">
+      <div className=" overflow-hidden lg:w-full">
+        <div className=" flex justify-between mx-2">
+          <h2
+            onClick={handleFilterOpen}
+            className=" px-2 bg-yellow-500 w-fit p-1 text-black rounded-sm font-semibold"
+          >
             Filter
           </h2>
-          {isOpenedFilter && (
-            <div className=" space-x-2 p-3 rounded-md">
+          <button
+            onClick={handleLayout}
+            className=" px-2 bg-yellow-500 w-fit p-1 text-black rounded-sm font-semibold"
+          >
+            {isGrid ? "Flex" : "Grid"}
+          </button>
+        </div>
+
+        {isOpenedFilter && (
+          <div className=" absolute lg:w-7/12  bg-cyan-600 text-black rounded-md p-1">
+            <span
+              onClick={handleFilterClose}
+              className="absolute -top-6 -right-4 h-6 w-6 text-center rounded-full bg-red-600"
+            >
+              X
+            </span>
+
+            <div className=" space-x-2 p-3 rounded-md h-fit lg:w-fit">
               <label>
                 Category:
                 <select
@@ -196,8 +203,9 @@ export default function PostList() {
                 Filter
               </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
         {loading ? (
           [...Array(5)].map((_, index) => (
             <div
@@ -219,17 +227,26 @@ export default function PostList() {
             </div>
           ))
         ) : (
-          <div className="flex flex-col lg:items-center">
+          <div
+            className={` ${
+              isGrid && "grid grid-cols-3"
+            } flex flex-col lg:items-center`}
+          >
             {currentItems?.map((item) => (
               <div
                 key={item._id}
-                className="flex flex-col lg:w-full lg:flex lg:flex-row p-4 text-md m-4 rounded-xl bg-white xs:text-red-500 dark:bg-slate-950 dark:text-white lg:text-green"
+                className={
+                  isGrid
+                    ? " bg-white w-[280px] m-2 h-[400px] overflow-hidden flex flex-col items-center p-2 mb-8 "
+                    : "flex flex-col lg:w-full lg:flex lg:flex-row p-4 text-md m-4 rounded-xl bg-white xs:text-red-500 dark:bg-slate-950 dark:text-white lg:text-green"
+                }
               >
                 <img
-                  className=" w-[324px] h-[281px]"
+                  className={`${isGrid ? "w-48 h-52" : "w-[324px] h-[281px]"}`}
                   src={`${item.featuredImage}`}
                 ></img>
-                <div className=" lg:flex lg:flex-col p-3">
+
+                <div className={isGrid ? " p-1" : "lg:flex lg:flex-col p-3"}>
                   <span className=" flex font-semibold">
                     {/* {item.tags.map((item) => (
                 <h3 className="bg-amber-400 rounded-md p-2 w-fit m-1">
@@ -237,16 +254,21 @@ export default function PostList() {
                 </h3>
               ))} */}
                   </span>
-                  <div className=" p-4">
-                    <h1 className=" text-xl font-semibold p-3">{item.title}</h1>
+                  <div className={isGrid ? " p-1" : "p-4"}>
+                    <h1
+                      className={
+                        isGrid ? " font-semibold" : "text-xl font-semibold p-3"
+                      }
+                    >
+                      {item.title}
+                    </h1>
                     <span className=" p-3">
                       📅 {formatedDate(item.publishedAt)}
                     </span>
 
                     {/* <span className="p-3">👨 Admin</span> */}
-                    <span className=" p-3">👍{item.likes?.length}</span>
+
                     <span className=" p-3">↪️{item.shares?.length}</span>
-                    <span className="p-3">💬 {item.comments?.length}</span>
                   </div>
                   <Link to={`blogs/${item._id}`} key={item.id}>
                     <p className=" line-clamp-4">{item.description}</p>
@@ -255,36 +277,40 @@ export default function PostList() {
                 </div>
               </div>
             ))}
-
-            <div className={` w-fit p-2 m-4  dark:text-white`}>
-              <button
-                disabled={currentPage === 1}
-                onClick={() => handlePeginate(currentPage - 1)}
-                className="m-2 font-semibold disabled:text-gray-400"
-              >
-                {`<<`}Previous
-              </button>
-              {peginateList.map((item) => (
-                <button
-                  key={item}
-                  className={`p-2  bg-slate-400 font-semibold m-1 px-3 ${
-                    item === currentPage && "text-red-600"
-                  }`}
-                  onClick={() => handlePeginate(item)}
-                >
-                  {item}
-                </button>
-              ))}
-              <button
-                disabled={currentPage === totalPages}
-                onClick={() => handlePeginate(currentPage + 1)}
-                className="m-2 font-semibold disabled:text-gray-400"
-              >
-                Next{`>>`}
-              </button>
-            </div>
           </div>
         )}
+
+        <div className="w-full">
+          <div
+            className={` flex justify-center items-center p-2 m-4  dark:text-white`}
+          >
+            <button
+              disabled={currentPage === 1}
+              onClick={() => handlePeginate(currentPage - 1)}
+              className="m-2 font-semibold disabled:text-gray-400"
+            >
+              {`<<`}Previous
+            </button>
+            {peginateList.map((item) => (
+              <button
+                key={item}
+                className={`p-2  bg-slate-400 font-semibold m-1 px-3 ${
+                  item === currentPage && "text-red-600"
+                }`}
+                onClick={() => handlePeginate(item)}
+              >
+                {item}
+              </button>
+            ))}
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => handlePeginate(currentPage + 1)}
+              className="m-2 font-semibold disabled:text-gray-400"
+            >
+              Next{`>>`}
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );
