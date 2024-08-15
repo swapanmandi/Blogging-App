@@ -18,7 +18,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
+    avatar: {
+      type: String,
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
     refreshToken: {
       type: String,
     },
@@ -27,7 +34,6 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
@@ -65,6 +71,5 @@ userSchema.methods.generateRefreshToken = function () {
     }
   );
 };
-
 
 export const User = mongoose.model("User", userSchema);
