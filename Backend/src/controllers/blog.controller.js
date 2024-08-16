@@ -26,9 +26,11 @@ const createBlog = asyncHandler(async (req, res) => {
   }
 
   const uploadFeaturedImage = await uploadOnCloudinary(featuredImageLocalPath);
-  console.log("fimage", featuredImageLocalPath);
 
-  console.log("upload cloudi", uploadFeaturedImage);
+  let publishedDate;
+  if (status === "active") {
+    publishedDate = new Date();
+  }
 
   const blog = await Blog.create({
     user: req.user,
@@ -39,6 +41,7 @@ const createBlog = asyncHandler(async (req, res) => {
     featuredImage: uploadFeaturedImage?.url || "",
     category,
     status,
+    publishedAt: publishedDate || "",
   });
 
   const createdBlog = await Blog.findById(blog._id);
@@ -109,7 +112,7 @@ const editPost = asyncHandler(async (req, res) => {
   ) {
     featuredImageLocalPath = req.files.featuredImage[0]?.path;
   }
-  console.log("fi", featuredImageLocalPath);
+
   const uploadFeaturedImage = await uploadOnCloudinary(featuredImageLocalPath);
 
   const blog = await Blog.findOneAndUpdate(
@@ -148,9 +151,7 @@ const deletePost = asyncHandler(async (req, res) => {
 //pub fetch all blog
 
 const getBlogList = asyncHandler(async (req, res) => {
-  const blogs = await Blog.find({ status: "active" }).select(
-    " -slug -status "
-  );
+  const blogs = await Blog.find({ status: "active" }).select(" -slug -status ");
 
   if (!blogs) {
     throw new ApiError(404, "There is no blogs or something went wrong.");
@@ -162,18 +163,54 @@ const getBlogList = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, blogs, "Blog list fetched succesfully"));
 });
 
-// pub fetch blog
+//get popular posts
 
-// const getBlog = asyncHandler(async (req, res) => {
-//   const { id: id } = req.params;
-//   const blog = await Blog.findOne({ _id: id });
+const popularPosts = asyncHandler(async (req, res) => {
+  try {
+    const topPosts = await Blog.aggregate([
+      {
+        $addFields: {
+          popularty: {
+            $add: ["$likes", "$views"],
+          },
+        },
+      },
+      {
+        $sort: {
+          popularty: -1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
 
-//   if (!blog) {
-//     throw new ApiError(404, "The blog is unavilable");
-//   }
+    res
+      .status(200)
+      .json(
+        new ApiResponse(200, topPosts, "Popular posts fetched successfully.")
+      );
+  } catch (error) {
+    throw new ApiError(400, "Error to indentify popular posts.");
+  }
+});
 
-//   res.status(200).json(new ApiResponse(200, blog, "Blog fetched successfully"));
-// });
+// counting views
+
+const views = asyncHandler(async(req, res) =>{
+  const {id: postId} = req.params
+  const post = await Blog.findById(postId)
+
+  if(post){
+    post.views += 1
+    await post.save()
+  }
+  else{
+    throw new ApiError(400, "post is not found")
+  }
+
+  res.status(200).json(new ApiResponse(200,{}, "Still counting the views"))
+})
 
 export {
   createBlog,
@@ -184,4 +221,6 @@ export {
   editPost,
   deletePost,
   draftPosts,
+  popularPosts,
+  views
 };
