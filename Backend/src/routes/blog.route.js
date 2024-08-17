@@ -7,6 +7,10 @@ import {
   editView,
   deletePost,
   draftPosts,
+  popularPosts,
+  trendingPosts,
+  views,
+  
 } from "../controllers/blog.controller.js";
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -23,8 +27,9 @@ router.route("/api/editView/:id").get(verifyJWT, editView);
 router.route("/api/edit/:id").put( upload.fields([{name: "featuredImage", maxCount: 1}]), verifyJWT, editPost);
 router.route("/api/delete/:id").delete(verifyJWT, deletePost);
 router.route("/api/draftpost").get(verifyJWT, draftPosts)
-
-
+router.route("/popular-posts").get(popularPosts)
+router.route("/trending-posts").get(trendingPosts)
+router.route("/post/views/:id").get(views)
 
 
 
