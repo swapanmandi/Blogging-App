@@ -4,15 +4,10 @@ import { Like } from "../models/like.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { LineIcon } from "react-share";
 
 const togglePostLike = asyncHandler(async (req, res) => {
   try {
     const { id: postId } = req.params;
-    const post = await Blog.findById(postId);
-    if (!post) {
-      throw new ApiError(404, "there is no post");
-    }
 
     const existedLike = await Like.findOne({
       likedBy: req.user._id,
@@ -20,15 +15,46 @@ const togglePostLike = asyncHandler(async (req, res) => {
     });
 
     if (existedLike) {
-      await Like.deleteOne({ likedBy: req.user._id, post: postId });
+      await Like.deleteOne({ _id: existedLike._id });
+      await Blog.findByIdAndUpdate(
+        postId,
+        {
+          $inc: {
+            likes: -1,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+
+      res
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            { status: false },
+            "Successfully disliked the post"
+          )
+        );
     } else {
       const like = new Like({ likedBy: req.user._id, post: postId });
       await like.save();
+      await Blog.findByIdAndUpdate(
+        postId,
+        { $inc: { likes: 1 } },
+        { new: true }
+      );
+      res
+        .status(200)
+        .json(
+          new ApiResponse(200, { status: true }, "Successfully liked the post")
+        );
     }
 
     res.status(200).json(new ApiResponse(200, {}, "Liked successfully"));
   } catch (error) {
-    throw new ApiError(400, "Error to Like post");
+    throw new ApiError(400, "Error to Like or dislike the post");
   }
 });
 
@@ -37,19 +63,18 @@ const togglePostLike = asyncHandler(async (req, res) => {
 const getLiked = asyncHandler(async (req, res) => {
   try {
     const { id: postId } = req.params;
+    const post = await Blog.findById(postId);
     const likedPost = await Like.findOne({
       likedBy: req.user._id,
       post: postId,
     });
-
-    const count = await Like.countDocuments({post:postId})
 
     res
       .status(200)
       .json(
         new ApiResponse(
           200,
-          { status: !!likedPost, noOfLikes: count },
+          { status: !!likedPost, noOfLikes: post.likes },
           "Successfully fetched liked status"
         )
       );
