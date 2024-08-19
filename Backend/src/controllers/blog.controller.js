@@ -195,22 +195,64 @@ const popularPosts = asyncHandler(async (req, res) => {
   }
 });
 
+const trendingPosts = asyncHandler(async (req, res) => {
+  try {
+    const topPosts = await Blog.aggregate([
+      {
+        $addFields: {
+          trendingScore: {
+            $add: [
+              { $multiply: ["$likes", 0.5] },
+              { $multiply: ["$views", 0.3] },
+              {
+                $multiply: [{ $subtract: [new Date(), "$publishedAt"] }, -0.1],
+              },
+            ],
+          },
+        },
+      },
+      {
+        $sort: { trendingScore: -1 },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          topPosts,
+          "trending posts fetched successfully"
+        )
+      );
+  } catch (error) {
+    throw new ApiError(400, "Error to indentify trending posts.");
+  }
+});
+
 // counting views
 
-const views = asyncHandler(async(req, res) =>{
-  const {id: postId} = req.params
-  const post = await Blog.findById(postId)
+const views = asyncHandler(async (req, res) => {
+  const { id: postId } = req.params;
+  const post = await Blog.findById(postId);
 
-  if(post){
-    post.views += 1
-    await post.save()
-  }
-  else{
-    throw new ApiError(400, "post is not found")
+  if (post) {
+    post.views += 1;
+    await post.save();
+  } else {
+    throw new ApiError(400, "post is not found");
   }
 
-  res.status(200).json(new ApiResponse(200,{}, "Still counting the views"))
-})
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, { views: post.views }, "Still counting the views")
+    );
+});
+
 
 export {
   createBlog,
@@ -222,5 +264,6 @@ export {
   deletePost,
   draftPosts,
   popularPosts,
-  views
+  trendingPosts,
+  views,
 };
