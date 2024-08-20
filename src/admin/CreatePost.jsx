@@ -5,25 +5,29 @@ import Button from "./Button.jsx";
 import Input from "./Input.jsx";
 import Select from "./Select.jsx";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function CreatePost() {
   const [post, setPost] = useState(null);
-
+  const [tag, setTag] = useState("");
+  const [tagList, setTagList] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
-    const editPost = async (req, res) => {
-      const response = await axios.get(
-        `http://localhost:3000/blog/api/editView/${id}`,
-        {
-          withCredentials: true,
-        }
-      );
-      //console.log("data", response.data.data);
-      setPost(response.data.data);
-    };
-    editPost();
+    if (id) {
+      const editPost = async () => {
+        const response = await axios.get(
+          `http://localhost:3000/blog/api/editView/${id}`,
+          {
+            withCredentials: true,
+          }
+        );
+        //console.log("data", response.data.data);
+        setPost(response.data.data);
+      };
+      editPost();
+    }
   }, [id]);
 
   const { register, handleSubmit, watch, setValue, control, getValues, reset } =
@@ -34,7 +38,7 @@ export default function CreatePost() {
         content: "",
         description: "",
         category: "",
-        //featuredImage: "",
+        featuredImage: "",
         status: "active",
       },
     });
@@ -50,6 +54,7 @@ export default function CreatePost() {
         featuredImage: post.featuredImage,
         status: post.status,
       });
+      setTagList(post.tags);
     }
   }, [post, reset]);
 
@@ -61,42 +66,48 @@ export default function CreatePost() {
     formData.append("content", data.content);
     formData.append("category", data.category);
     formData.append("status", data.status);
-    //formData.append("tags", JSON.stringify(data.tags));
+    tagList.forEach((item, index) => {
+      formData.append(`tags[${index}]`, item);
+    });
+
     if (data.featuredImage[0]) {
       formData.append("featuredImage", data.featuredImage[0]);
     }
 
-    console.log("data", formData.get("featuredImage"));
+    //console.log("data", formData.get("featuredImage"));
 
-    const blogData = {
-      title: formData.get("title"),
-      slug: formData.get("slug"),
-      description: formData.get("description"),
-      content: formData.get("content"),
-      category: formData.get("category"),
-      featuredImage: formData.get("featuredImage"),
-      status: formData.get("status"),
-    };
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}:`, value);
+    // }
 
     try {
       if (post) {
-        await axios.put(`http://localhost:3000/blog/api/edit/${id}`, blogData, {
-          withCredentials: true,
-        });
-      } else {
-        await axios.post(
-          "http://localhost:3000/blog/api/createBlog",
-          blogData,
+        const result = await axios.put(
+          `http://localhost:3000/blog/post/edit/${id}`,
+          formData,
           {
             withCredentials: true,
             headers: {
-              "Content-Type": "multipart/form-data"
-            }
-           }
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        toast(result.data.message);
+      } else {
+        await axios.post(
+          "http://localhost:3000/blog/api/createBlog",
+          formData,
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
         );
       }
     } catch (error) {
       console.log("Error submitting post", error);
+      toast(error?.message);
     }
   };
 
@@ -121,20 +132,21 @@ export default function CreatePost() {
     return () => sub.unsubscribe();
   }, [watch, slugTransform, setValue]);
 
-  //   const addTag = (tag) => {
-  //     tag.preventDefault()
-  //     if (tag && !tags.includes(tag.trim())) {
-  //       setTags([...tags, tag.trim()]);
-  //     }
-  //   };
+  const handleTagChange = (e) => {
+    setTag(e.target.value);
+  };
 
-  // const removeTag = (tag) => {
-  //   const currentTags = getValues("tags");
-  //   setValue(
-  //     "tags",
-  //     currentTags.filter((item) => item !== tag)
-  //   );
-  // };
+  const addTag = () => {
+    const newTag = tag;
+    if (!tagList.includes(newTag.trim())) {
+      setTagList([...tagList, newTag.trim()]);
+    }
+    setTag("");
+  };
+
+  const removeTag = (tag) => {
+    setTagList(tagList.filter((item) => item !== tag));
+  };
 
   return (
     <>
@@ -179,24 +191,37 @@ export default function CreatePost() {
               options={["Category1", "Category2", "Category3"]}
             />
 
-            {/* <div>
-              <label>Tags:</label>
-              <div className="flex">
-                <Input type="text" name="tags" className="flex-1"{...register ("tags")} />
-                <Button type="button" onClick={addTag}>Add</Button>
-              </div>
+            <div className="flex">
+              <label>
+                Tags:
+                <input
+                  className=" text-black"
+                  type="text"
+                  placeholder="add tags...."
+                  onChange={handleTagChange}
+                  value={tag}
+                ></input>
+              </label>
+
+              <button
+                type="button"
+                onClick={addTag}
+                className=" p-2 m-2 rounded-md bg-lime-500"
+              >
+                Add
+              </button>
             </div>
 
-            <div>
-              {getValues("tags").map((tag) => (
-                <span key={tag} className="">
+            <div className=" text-black">
+              {tagList?.map((tag, index) => (
+                <span key={index} className="">
                   {tag}
                   <Button type="button" onClick={() => removeTag(tag)}>
                     x
                   </Button>
                 </span>
               ))}
-            </div> */}
+            </div>
 
             <Input
               label="Featured Image:"
@@ -205,11 +230,11 @@ export default function CreatePost() {
               {...register("featuredImage")}
             />
 
-            {/* {post && post.image && (
+            {post && post.featuredImage && (
               <div>
-                <img src={post.image} alt="" />
+                <img className=" h-80 w-64" src={post.featuredImage} alt="" />
               </div>
-            )} */}
+            )}
 
             <Select
               options={["active", "inactive"]}
@@ -217,6 +242,11 @@ export default function CreatePost() {
               className="mb-4"
               {...register("status", { required: true })}
             />
+            <Link to="/admin/dashboard/list">
+              <button type="button" className=" bg-green-500 w-full">
+                Cancel
+              </button>
+            </Link>
             <Button
               type="submit"
               bgColor={post ? "bg-green-500" : undefined}
@@ -226,6 +256,7 @@ export default function CreatePost() {
             </Button>
           </form>
         </div>
+        <ToastContainer />
       </div>
     </>
   );

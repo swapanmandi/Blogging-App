@@ -29,9 +29,27 @@ const blogSchema = new mongoose.Schema({
     category:{
         type:String
     },
+    tags:{
+        type:[String]
+    },
     status:{
         type: String,
         enum:['active', 'inactive']
+    },
+    views:{
+        type: Number,
+        default: 0
+    },
+    likes:{
+        type: Number,
+        default: 0
+    },
+    comments:{
+        type: Number,
+        default: 0
+    },
+    publishedAt:{
+        type:String
     }
 },{timestamps:true})
 
