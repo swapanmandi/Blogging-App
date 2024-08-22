@@ -4,15 +4,15 @@ const messageSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
-      required: true,
+      
     },
     email: {
       type: String,
-      required: true,
+     
     },
-    post: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Blog",
+    message: {
+      type: String,
+      required: true
     },
   },
   { timestamps: true }
