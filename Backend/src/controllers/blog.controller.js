@@ -3,11 +3,14 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Blog } from "../models/blog.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import redis from "../utils/redis.js";
+import { Await } from "react-router-dom";
 
 // ad create post
 
 const createBlog = asyncHandler(async (req, res) => {
-  const { title, slug, description, content, category, status } = req.body;
+  const { title, slug, description, content, category, tags, status } =
+    req.body;
 
   console.log("data", req.body);
 
@@ -40,6 +43,7 @@ const createBlog = asyncHandler(async (req, res) => {
     content,
     featuredImage: uploadFeaturedImage?.url || "",
     category,
+    tags,
     status,
     publishedAt: publishedDate || "",
   });
@@ -150,20 +154,57 @@ const deletePost = asyncHandler(async (req, res) => {
 
 //pub fetch all blog
 
+// const getBlogList = asyncHandler(async (req, res) => {
+//   const blogs = await Blog.find({ status: "active" }).select(" -slug -status ");
+
+//   if (!blogs) {
+//     throw new ApiError(404, "There is no blogs or something went wrong.");
+//   }
+
+//   res
+//     .status(200)
+
+//     .json(new ApiResponse(200, blogs, "Blog list fetched succesfully"));
+// });
+
 const getBlogList = asyncHandler(async (req, res) => {
-  const blogs = await Blog.find({ status: "active" }).select(" -slug -status ");
+  const cachedPosts = await redis.get("pub_posts");
 
-  if (!blogs) {
-    throw new ApiError(404, "There is no blogs or something went wrong.");
+ 
+  if (cachedPosts) {
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          JSON.parse(cachedPosts),
+          "Cached post list fetched successfully."
+        )
+      );
+  } else {
+    const posts = await Blog.find({
+      status: "active",
+    }).select(" -status -slug");
+
+    //console.log(posts)
+
+    if (!posts) {
+      throw new ApiError(500, "There is no Blogs or Error to fetch blogs.");
+    }
+
+    await redis.set("pub_posts", JSON.stringify(posts), "EX", 3600);
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          JSON.parse(posts),
+          "Post list fetched successfully."
+        )
+      );
   }
-
-  res
-    .status(200)
-
-    .json(new ApiResponse(200, blogs, "Blog list fetched succesfully"));
 });
-
-//get popular posts
 
 const popularPosts = asyncHandler(async (req, res) => {
   try {
@@ -197,6 +238,7 @@ const popularPosts = asyncHandler(async (req, res) => {
 
 const trendingPosts = asyncHandler(async (req, res) => {
   try {
+    const currentDate = new Date();
     const topPosts = await Blog.aggregate([
       {
         $addFields: {
@@ -204,9 +246,9 @@ const trendingPosts = asyncHandler(async (req, res) => {
             $add: [
               { $multiply: ["$likes", 0.5] },
               { $multiply: ["$views", 0.3] },
-              {
-                $multiply: [{ $subtract: [new Date(), "$publishedAt"] }, -0.1],
-              },
+              // {
+              //   $multiply: [{ $subtract: [currentDate, "$publishedAt"] }, -0.1],
+              // },
             ],
           },
         },
@@ -222,11 +264,7 @@ const trendingPosts = asyncHandler(async (req, res) => {
     res
       .status(200)
       .json(
-        new ApiResponse(
-          200,
-          topPosts,
-          "trending posts fetched successfully"
-        )
+        new ApiResponse(200, topPosts, "trending posts fetched successfully")
       );
   } catch (error) {
     throw new ApiError(400, "Error to indentify trending posts.");
@@ -252,7 +290,6 @@ const views = asyncHandler(async (req, res) => {
       new ApiResponse(200, { views: post.views }, "Still counting the views")
     );
 });
-
 
 export {
   createBlog,
