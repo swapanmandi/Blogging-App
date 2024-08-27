@@ -154,23 +154,9 @@ const deletePost = asyncHandler(async (req, res) => {
 
 //pub fetch all blog
 
-// const getBlogList = asyncHandler(async (req, res) => {
-//   const blogs = await Blog.find({ status: "active" }).select(" -slug -status ");
-
-//   if (!blogs) {
-//     throw new ApiError(404, "There is no blogs or something went wrong.");
-//   }
-
-//   res
-//     .status(200)
-
-//     .json(new ApiResponse(200, blogs, "Blog list fetched succesfully"));
-// });
-
 const getBlogList = asyncHandler(async (req, res) => {
   const cachedPosts = await redis.get("pub_posts");
 
- 
   if (cachedPosts) {
     return res
       .status(200)
@@ -208,7 +194,7 @@ const getBlogList = asyncHandler(async (req, res) => {
 
 const popularPosts = asyncHandler(async (req, res) => {
   try {
-    const topPosts = await Blog.aggregate([
+    const trendPosts = await Blog.aggregate([
       {
         $addFields: {
           popularty: {
@@ -229,17 +215,23 @@ const popularPosts = asyncHandler(async (req, res) => {
     res
       .status(200)
       .json(
-        new ApiResponse(200, topPosts, "Popular posts fetched successfully.")
+        new ApiResponse(200, trendPosts, "Popular posts fetched successfully.")
       );
   } catch (error) {
     throw new ApiError(400, "Error to indentify popular posts.");
   }
 });
 
+//trend posts
+
 const trendingPosts = asyncHandler(async (req, res) => {
-  try {
-    const currentDate = new Date();
-    const topPosts = await Blog.aggregate([
+  const currentDate = new Date();
+  let trendPosts = await redis.get("trend_posts");
+
+  if (trendPosts) {
+    trendPosts = JSON.parse(trendPosts);
+  } else {
+    trendPosts = await Blog.aggregate([
       {
         $addFields: {
           trendingScore: {
@@ -261,14 +253,18 @@ const trendingPosts = asyncHandler(async (req, res) => {
       },
     ]);
 
-    res
-      .status(200)
-      .json(
-        new ApiResponse(200, topPosts, "trending posts fetched successfully")
-      );
-  } catch (error) {
-    throw new ApiError(400, "Error to indentify trending posts.");
+    if (!trendPosts) {
+      throw new ApiError(400, "Error to indentify trending posts.");
+    }
+
+    await redis.set("trend_posts", JSON.stringify(trendPosts), "EX", 3600);
   }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, trendPosts, "trending posts fetched successfully")
+    );
 });
 
 // counting views
