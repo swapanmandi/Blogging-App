@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { AxiosError } from "axios";
 
 // generate access and refresh Tokens
 
@@ -92,7 +93,7 @@ const signinUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required");
   }
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email , role: "user"});
 
   if (!user) {
     throw new ApiError(401, "User does not exist.");
@@ -108,7 +109,7 @@ const signinUser = asyncHandler(async (req, res) => {
     await generateAccessTokenAndrefreshTokens(user._id);
 
   const signedinUser = await User.findById(user._id).select(
-    "-password -refreshToken"
+    "-password "
   );
 
   if (!signedinUser) {
@@ -124,6 +125,49 @@ const signinUser = asyncHandler(async (req, res) => {
     .cookie("refreshToken", refreshToken, options)
     .status(200)
     .json(new ApiResponse(200, signedinUser, "User Loggedin successfully."));
+});
+
+//admin login
+
+const adminSignin = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new ApiError(400, "All Fields are Required");
+  }
+
+  const user = await User.findOne({ email, role: "admin" });
+
+  if (!user) {
+    throw new ApiError(400, "User does not find");
+  }
+
+  const isPasswordValid = await user.isPasswordCorrect(password);
+
+  if (!isPasswordValid) {
+    throw new ApiError(400, "Credentials are incorrect.");
+  }
+
+  const { accessToken, refreshToken } =
+    await generateAccessTokenAndrefreshTokens(user._id);
+
+  const signedInUser = await User.findById(user._id).select(
+    " -password -refreshToken -role"
+  );
+  if (!signedInUser) {
+    throw new ApiError(400, "Error to signin");
+  }
+
+  const options = {
+    httpOnly: true,
+    secure: false,
+  };
+
+  res
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .status(200)
+    .json(new ApiResponse(200, signedInUser, "user signed successfully"));
 });
 
 // logout
@@ -147,15 +191,15 @@ const logoutUser = asyncHandler(async (req, res) => {
   return res
     .cookie("accessToken", options)
     .cookie("refreshToken", options)
-    .json(new ApiResponse(200, {}, "User logout successfully"));
+    .json(new ApiResponse(200, {role:req.user?.role}, "User logout successfully"));
 });
 
 // add profile pic
 
 const setAvatarImage = asyncHandler(async (req, res) => {
-  const avatarLocalPath = req.files?.avatar[0].path
-  
-  console.log("avatar", avatarLocalPath)
+  const avatarLocalPath = req.files?.avatar[0].path;
+
+  console.log("avatar", avatarLocalPath);
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar File is Missing.");
   }
@@ -164,7 +208,6 @@ const setAvatarImage = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Error to upload avatar.");
   }
 
-  
   const user = await User.findByIdAndUpdate(
     req.user._id,
     {
@@ -195,18 +238,23 @@ const getProfile = asyncHandler(async (req, res) => {
 
 //protected Route
 
-// const protectedRote = asyncHandler(async(req, res) =>{
-//   try {
+const protectedRoute = asyncHandler(async(req, res) =>{
+  try {
+const user = await User.findById(req.user._id)
 
-//     res
-//     .status(200)
-//     .json(
-//       new ApiResponse(200, {}, "You are Authenticated")
-//     )
-//   } catch (error) {
-//     throw new ApiError(500, "Error to validate Authentication")
-//   }
-// })
+if(!user){
+  throw new AxiosError(400,"You are not Authenticated.")
+}
+
+    res
+    .status(200)
+    .json(
+      new ApiResponse(200, {status: true}, "You are Authenticated")
+    )
+  } catch (error) {
+    throw new ApiError(500, "Error to validate Authentication")
+  }
+})
 
 //refresh accessToken
 
@@ -290,13 +338,38 @@ const updateAccount = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "Account updated Successfully."));
 });
 
+
+const changePassword = asyncHandler(async(req, res)=>{
+  const {oldPassword, newPassword} = req.body
+ 
+  if(!oldPassword || !newPassword){
+    throw new ApiError(400, "All fields are required.")
+  }
+
+  const user = await User.findById(req.user?._id)
+  const isPasswordValid = await user.isPasswordCorrect(oldPassword)
+
+  if(!isPasswordValid){
+    throw new ApiError(400, "Password is inValid.")
+  }
+
+   user.password = newPassword
+await user.save({validateBeforeSave: false})
+
+res.status(200).json(new ApiResponse(200, {}, "Password is successfully changed."))
+
+})
+
 export {
   signupUser,
   signupAdmin,
   setAvatarImage,
   getProfile,
   signinUser,
+  adminSignin,
   logoutUser,
   refreshAccessToken,
   updateAccount,
+  protectedRoute,
+  changePassword
 };

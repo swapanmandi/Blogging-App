@@ -1,10 +1,12 @@
 import React, { useContext, useState} from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { PrivateRouteContext } from "../store/PrivateRouteProvider.jsx";
+import { AuthContext } from "../store/AuthContext.jsx";
 
 export default function PrivateRoute() {
 
-  const { isAuthenticated, loading } = useContext(PrivateRouteContext);
+  const { isAuthenticated, loading } = useContext(AuthContext);
+ 
+  console.log("auth status", isAuthenticated)
 
   if(loading){
     return <div>Loading...</div>
