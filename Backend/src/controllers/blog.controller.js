@@ -9,10 +9,14 @@ import { Await } from "react-router-dom";
 // ad create post
 
 const createBlog = asyncHandler(async (req, res) => {
+  const admin = req.user?.role;
+  if (admin !== "admin") {
+    throw new ApiError(401, "You are not a admin.");
+  }
   const { title, slug, description, content, category, tags, status } =
     req.body;
 
-  console.log("data", req.body);
+  //console.log("data", req.body);
 
   if ([title, slug, content].some((item) => item.trim() === "")) {
     throw new ApiError(400, "Field can not be empty.");
@@ -59,7 +63,7 @@ const createBlog = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdBlog, "data saved successfully."));
 });
 
-// ad list published post
+// ad published post list
 
 const allPostList = asyncHandler(async (req, res) => {
   const blog = await Blog.find({ user: req.user._id, status: "active" });
@@ -103,6 +107,11 @@ const editView = asyncHandler(async (req, res) => {
 //ad edit blog
 
 const editPost = asyncHandler(async (req, res) => {
+
+  const admin = req.user?.role;
+  if (admin !== "admin") {
+    throw new ApiError(401, "You are not a admin.");
+  }
   const { id: id } = req.params;
   const { title, slug, description, content, category, status } = req.body;
   console.log("edit data", req.body);
@@ -142,6 +151,12 @@ const editPost = asyncHandler(async (req, res) => {
 // ad delete post
 
 const deletePost = asyncHandler(async (req, res) => {
+
+  const admin = req.user?.role;
+  if (admin !== "admin") {
+    throw new ApiError(401, "You are not a admin.");
+  }
+
   const { id: id } = req.params;
   const result = await Blog.deleteOne({ _id: id });
 
@@ -191,6 +206,9 @@ const getBlogList = asyncHandler(async (req, res) => {
       );
   }
 });
+
+
+// popular posts
 
 const popularPosts = asyncHandler(async (req, res) => {
   try {
