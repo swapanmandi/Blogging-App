@@ -1,23 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
-import { PostContext } from "../store/PostContext-store";
+import { usePostContext } from "../store/PostContext-store.jsx";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import MainSidebar from "../component/MainSidebar";
-import RelatedPosts from "../component/RelatedPosts";
-import SocialShare from "../component/SocialShare";
+import MainSidebar from "../component/MainSidebar.jsx";
+import RelatedPosts from "../component/RelatedPosts.jsx";
+import SocialShare from "../component/SocialShare.jsx";
 import parse from "html-react-parser";
 import ShareModal from "../component/ShareModal.jsx";
 import axios from "axios";
 import Comment from "../component/Comment.jsx";
+import SavedPosts from "../component/SavedPosts.jsx";
+import { SettingsContext } from "../store/SettingsContext.jsx";
 
 export default function Post() {
-  const { posts } = useContext(PostContext);
+  const { posts, formatedDate } = usePostContext();
   const [data, setData] = useState(posts);
-  const [currDate, setCurrDate] = useState(new Date());
   const [viewComment, setViewComment] = useState(false);
   const [isOpenedShareModal, setIsOpenedShareModel] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const [likeStatus, setLikeStatus] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
+  const [totalViews, setTotalViews] = useState(0);
 
   const { postId } = useParams();
   const location = useLocation();
@@ -25,7 +27,16 @@ export default function Post() {
 
   const nevigate = useNavigate();
 
+  const {
+    showCategoryOnPost = true,
+    showTagOnPost = true,
+    showAdminOnPost = true,
+    showDateOnPost = true,
+    showTimeOnPost = false,
+  } = useContext(SettingsContext);
+
   useEffect(() => {
+    window.scrollTo(0, 0);
     setData(posts);
   }, [posts]);
 
@@ -63,12 +74,7 @@ export default function Post() {
 
   //like api
 
-  // useEffect(() => {
-  //   isLiked && setLikeStatus(true);
-  // }, [isLiked]);
-
   const postLike = async () => {
-   
     const result = await axios.post(
       `http://localhost:3000/app/post/like/${postId}`,
       {},
@@ -86,40 +92,99 @@ export default function Post() {
   //for counting view
   useEffect(() => {
     const views = async () => {
-      await axios.get(`http://localhost:3000/blog/post/views/${postId}`);
-      console.log("view");
+      const result = await axios.get(
+        `http://localhost:3000/blog/post/views/${postId}`
+      );
+      setTotalViews(result.data.data.views);
     };
     views();
   }, []);
 
+  // fetch initial save status
+
+  useEffect(() => {
+    const checkSavedStatus = async () => {
+      const result = await axios.get(
+        `http://localhost:3000/app/blog/post/saved-status/${postId}`,
+        { withCredentials: true }
+      );
+      setIsSaved(result.data.data.status);
+    };
+    checkSavedStatus();
+  }, [postId]);
+
+  // save post
+
+  const savePost = async () => {
+    const result = await axios.post(
+      `http://localhost:3000/app/blog/post/save-post/${postId}`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+    //setIsSaved(true)
+    setIsSaved(result.data.data.status);
+  };
+
+  console.log(viewPost);
+
   return (
     <>
       <div className="flex">
-        <div className=" bg-white dark:bg-slate-950 dark:text-white w-8/12  m-4 p-5">
+        <div className=" bg-white dark:bg-slate-950 dark:text-white w-10/12  m-4 p-5">
           {viewPost.map((item) => (
             <div className="" key={item._id}>
               <img
                 className=" w-[760px] h-[490px] mb-5"
                 src={item.featuredImage}
               ></img>
-              <span className=" bg-orange-400 rounded-lg">{item.tags}</span>
 
               <div className=" p-4">
                 <h1 className=" text-xl font-semibold p-3">{item.title}</h1>
-                <span className=" p-3">📅 {item.publishedAt}</span>
-
-                <span className="p-3">👨 Admin</span>
               </div>
 
               {/* -------------content--------------- */}
               <div>{parse(item.content)}</div>
+
+              <div className=" flex flex-col my-3">
+                <div className=" flex">
+                  <span className="p-1 m-2  w-fit">👨 Admin</span>
+                  <span className=" p-1 m-2">
+                    📅 {formatedDate(item.publishedAt)}
+                  </span>
+
+                  {showCategoryOnPost &&
+                    item.category?.map((item) => (
+                      <span
+                        key={item}
+                        className=" bg-lime-200 rounded-md p-1 m-2"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                </div>
+
+             <div>
+              <span className=" m-2 font-medium">Tags:</span>
+             {showTagOnPost &&
+                  item.tags?.map((item) => (
+                    <span
+                      key={item}
+                      className=" bg-orange-300 rounded-md m-1 px-1"
+                    >
+                      {item}
+                    </span>
+                  ))}
+              </div>
+              </div>
 
               <div className=" mt-10 items-center flex justify-between">
                 <div className=" bg-red-400 h-10 rounded-md w-fit m-3">
                   <Link to={`/blogs/${prevPost?._id}`}>
                     <button
                       disabled={currentIndex === 0}
-                      className="p-2 disabled:text-gray-400"
+                      className="p-2 disabled:text-gray-400 mr-4"
                     >
                       Previous
                     </button>
@@ -128,7 +193,7 @@ export default function Post() {
                   <Link to={`/blogs/${nextPost?._id}`}>
                     <button
                       disabled={currentIndex === data.length - 1}
-                      className=" p-2 disabled:text-gray-400"
+                      className=" p-2 disabled:text-gray-400 ml-4"
                     >
                       Next
                     </button>
@@ -136,6 +201,10 @@ export default function Post() {
                 </div>
 
                 <div className=" bg-red-400 rounded-md h-10 flex justify-center  items-center w-fit m-3 space-x-5">
+                  <span className=" p-2">👁️ {Math.round(totalViews / 2)}</span>
+                  <span className=" cursor-pointer p-2" onClick={savePost}>
+                    {isSaved ? "✔" : "⛉"}
+                  </span>
                   <span onClick={postLike} className=" p-2 cursor-pointer">
                     {isLiked ? "💙" : "🤍"}
                     {totalLikes}
@@ -169,7 +238,10 @@ export default function Post() {
           ))}
         </div>
 
-        <MainSidebar date={currDate} />
+        <div>
+          <MainSidebar />
+          <SavedPosts />
+        </div>
       </div>
       <RelatedPosts posts={posts} heading={"Related Posts"} />
     </>
