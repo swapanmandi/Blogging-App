@@ -1,11 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { PostContext } from "../store/PostContext-store";
+import { usePostContext } from "../store/PostContext-store.jsx";
 import { Link, useParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import RelatedPosts from "./RelatedPosts.jsx";
+import axios from "axios";
+import { useSettings } from "../store/SettingsContext.jsx";
 
 export default function PostList() {
-  const { loading, displayPost } = useContext(PostContext);
+  const { loading, displayPost, formatdDate } = usePostContext();
 
   const [isOpenedFilter, setIsOpenedFilter] = useState(false);
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -16,10 +19,15 @@ export default function PostList() {
     endDate: "",
     sort: "",
   });
+
+  const [popularPosts, setPopularPosts] = useState(null);
   const [isGrid, setIsGrid] = useState(true);
   const [itemPerPage, setItemPerPage] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
   const [peginateList, setPeginateList] = useState([]);
+
+  const { showAdminOnList = true, showDateOnList = true } =
+    useSettings()?.settings || {};
 
   useEffect(() => {
     setFilteredPosts(displayPost);
@@ -99,15 +107,18 @@ export default function PostList() {
     setFilteredPosts(tempPosts);
   };
 
-  const formatedDate = (e) => {
-    const date = new Date(e);
-    const dd = date.getDate();
-    const mm = date.getMonth() + 1;
-    const yyyy = date.getFullYear();
-    return `${dd}-${mm}-${yyyy}`;
-  };
-
   const handleLayout = () => setIsGrid(!isGrid);
+
+  useEffect(() => {
+    const handlePopularPosts = async () => {
+      const result = await axios.get(
+        "http://localhost:3000/blog/popular-posts"
+      );
+      setPopularPosts(result.data.data);
+    };
+
+    handlePopularPosts();
+  }, []);
 
   return (
     <>
@@ -140,6 +151,7 @@ export default function PostList() {
               <label>
                 Category:
                 <select
+                  value={filter.category}
                   onChange={handleFilterChange}
                   className=" m-2 rounded-sm"
                   name="category"
@@ -156,6 +168,7 @@ export default function PostList() {
               <label>
                 Date
                 <input
+                  value={filter.date}
                   onChange={handleFilterChange}
                   className=" m-2 rounded-sm"
                   type="date"
@@ -165,6 +178,7 @@ export default function PostList() {
               <label>
                 Start Date
                 <input
+                  value={filter.startDate}
                   onChange={handleFilterChange}
                   className=" m-2 rounded-sm"
                   type="date"
@@ -175,6 +189,7 @@ export default function PostList() {
               <label>
                 End Date
                 <input
+                  value={filter.endDate}
                   onChange={handleFilterChange}
                   className=" m-2 rounded-sm"
                   type="date"
@@ -185,6 +200,7 @@ export default function PostList() {
               <label>
                 Sort By
                 <select
+                  value={filter.sort}
                   onChange={handleFilterChange}
                   className=" m-2 rounded-sm"
                   name="sort"
@@ -248,8 +264,8 @@ export default function PostList() {
 
                 <div className={isGrid ? " p-1" : "lg:flex lg:flex-col p-3"}>
                   <span className=" flex font-semibold">
-                    {/* {item.tags.map((item) => (
-                <h3 className="bg-amber-400 rounded-md p-2 w-fit m-1">
+                    {/* {item.tags?.map((item) => (
+                <h3 className=" rounded-md px-1 w-fit m-1">
                   {item}
                 </h3>
               ))} */}
@@ -262,15 +278,16 @@ export default function PostList() {
                     >
                       {item.title}
                     </h1>
-                    <span className=" p-3">
-                      📅 {formatedDate(item.publishedAt)}
-                    </span>
 
-                    {/* <span className="p-3">👨 Admin</span> */}
+                    {showAdminOnList && <span className="p-3">👨 Admin</span>}
 
-                    <span className=" p-3">↪️{item.shares?.length}</span>
+                    {showDateOnList && (
+                      <span className=" p-3">
+                        📅 {formatdDate(item.publishedAt)}
+                      </span>
+                    )}
                   </div>
-                  <Link to={`blogs/${item._id}`} key={item.id}>
+                  <Link to={`/blogs/${item._id}`} key={item.id}>
                     <p className=" line-clamp-4">{item.description}</p>
                     <h3 className=" font-semibold">Read More</h3>
                   </Link>
@@ -293,6 +310,7 @@ export default function PostList() {
             </button>
             {peginateList.map((item) => (
               <button
+                type="button"
                 key={item}
                 className={`p-2  bg-slate-400 font-semibold m-1 px-3 ${
                   item === currentPage && "text-red-600"
@@ -311,6 +329,7 @@ export default function PostList() {
             </button>
           </div>
         </div>
+        <RelatedPosts posts={popularPosts} heading={"Popular Posts"} />
       </div>
     </>
   );

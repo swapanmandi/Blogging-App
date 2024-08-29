@@ -9,10 +9,13 @@ import ShareModal from "../component/ShareModal.jsx";
 import axios from "axios";
 import Comment from "../component/Comment.jsx";
 import SavedPosts from "../component/SavedPosts.jsx";
-import { SettingsContext } from "../store/SettingsContext.jsx";
+import { useSettings } from "../store/SettingsContext.jsx";
+import { AuthContext } from "../store/AuthContext.jsx";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Post() {
-  const { posts, formatedDate } = usePostContext();
+  const { posts, formatdDate } = usePostContext();
   const [data, setData] = useState(posts);
   const [viewComment, setViewComment] = useState(false);
   const [isOpenedShareModal, setIsOpenedShareModel] = useState(false);
@@ -20,6 +23,8 @@ export default function Post() {
   const [isSaved, setIsSaved] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
   const [totalViews, setTotalViews] = useState(0);
+
+  const { isAuthenticated } = useContext(AuthContext);
 
   const { postId } = useParams();
   const location = useLocation();
@@ -33,7 +38,9 @@ export default function Post() {
     showAdminOnPost = true,
     showDateOnPost = true,
     showTimeOnPost = false,
-  } = useContext(SettingsContext);
+  } = useSettings()?.settings || {};
+
+  console.log("ad sh", showAdminOnPost)
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -69,24 +76,33 @@ export default function Post() {
       setIsLiked(result.data.data.status);
       setTotalLikes(result.data.data.noOfLikes);
     };
-    handleLikeStatus();
+    isAuthenticated && handleLikeStatus();
   }, [postId]);
 
   //like api
 
   const postLike = async () => {
-    const result = await axios.post(
-      `http://localhost:3000/app/post/like/${postId}`,
-      {},
-      {
-        withCredentials: true,
-      }
-    );
+    if (!isAuthenticated) {
+      toast("You have not Logged in.");
+      return;
+    }
 
-    setIsLiked(result.data.data.status);
-    setTotalLikes((prevLikes) =>
-      result.data.data.status ? prevLikes + 1 : prevLikes - 1
-    );
+    try {
+      const result = await axios.post(
+        `http://localhost:3000/app/post/like/${postId}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      setIsLiked(result.data.data.status);
+      setTotalLikes((prevLikes) =>
+        result.data.data.status ? prevLikes + 1 : prevLikes - 1
+      );
+    } catch (error) {
+      console.error("Error Liking the Post", error);
+    }
   };
 
   //for counting view
@@ -97,7 +113,7 @@ export default function Post() {
       );
       setTotalViews(result.data.data.views);
     };
-    views();
+    isAuthenticated && views();
   }, []);
 
   // fetch initial save status
@@ -110,7 +126,7 @@ export default function Post() {
       );
       setIsSaved(result.data.data.status);
     };
-    checkSavedStatus();
+    isAuthenticated && checkSavedStatus();
   }, [postId]);
 
   // save post
@@ -126,8 +142,6 @@ export default function Post() {
     //setIsSaved(true)
     setIsSaved(result.data.data.status);
   };
-
-  console.log(viewPost);
 
   return (
     <>
@@ -149,10 +163,18 @@ export default function Post() {
 
               <div className=" flex flex-col my-3">
                 <div className=" flex">
-                  <span className="p-1 m-2  w-fit">👨 Admin</span>
-                  <span className=" p-1 m-2">
+                  {showAdminOnPost && (
+                    <span className="p-1 m-2  w-fit">👨 Admin</span>
+                  )}
+                  {showDateOnPost && (
+                    <span className=" p-1 m-2">
+                      📅 {formatdDate(item.publishedAt)}
+                    </span>
+                  )}
+
+                  {/* { showTimeOnPost &&  <span className=" p-1 m-2">
                     📅 {formatedDate(item.publishedAt)}
-                  </span>
+                  </span>} */}
 
                   {showCategoryOnPost &&
                     item.category?.map((item) => (
@@ -165,18 +187,18 @@ export default function Post() {
                     ))}
                 </div>
 
-             <div>
-              <span className=" m-2 font-medium">Tags:</span>
-             {showTagOnPost &&
-                  item.tags?.map((item) => (
-                    <span
-                      key={item}
-                      className=" bg-orange-300 rounded-md m-1 px-1"
-                    >
-                      {item}
-                    </span>
-                  ))}
-              </div>
+                <div>
+                  <span className=" m-2 font-medium">Tags:</span>
+                  {showTagOnPost &&
+                    item.tags?.map((item) => (
+                      <span
+                        key={item}
+                        className=" bg-orange-300 rounded-md m-1 px-1"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                </div>
               </div>
 
               <div className=" mt-10 items-center flex justify-between">
@@ -244,6 +266,7 @@ export default function Post() {
         </div>
       </div>
       <RelatedPosts posts={posts} heading={"Related Posts"} />
+      <ToastContainer />
     </>
   );
 }
