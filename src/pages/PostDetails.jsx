@@ -27,6 +27,9 @@ export default function Post() {
   const { isAuthenticated } = useContext(AuthContext);
 
   const { postId } = useParams();
+
+  console.log("postId", postId);
+
   const location = useLocation();
   const newUrl = location.pathname.split("/")[1];
 
@@ -38,17 +41,30 @@ export default function Post() {
     showAdminOnPost = true,
     showDateOnPost = true,
     showTimeOnPost = false,
+    permalinkType = "title",
   } = useSettings()?.settings || {};
 
-  console.log("ad sh", showAdminOnPost)
-
+ 
   useEffect(() => {
     window.scrollTo(0, 0);
     setData(posts);
   }, [posts]);
 
-  const viewPost = data.filter((item) => String(item._id) === postId);
-  const currentIndex = data.findIndex((item) => String(item._id) === postId);
+  let linkStruct = "slug";
+  if (permalinkType === "id") {
+    linkStruct = "_id";
+  }
+
+  console.log("per type", permalinkType)
+  const viewPost = data.filter((item) => String(item?.[linkStruct]) === postId);
+
+  console.log("post", viewPost);
+
+  const currentIndex = data.findIndex(
+    (item) => String(item?.[linkStruct]) === postId
+  );
+
+  console.log("index", currentIndex);
 
   const prevPost = data[currentIndex - 1];
   const nextPost = data[currentIndex + 1];
@@ -203,7 +219,7 @@ export default function Post() {
 
               <div className=" mt-10 items-center flex justify-between">
                 <div className=" bg-red-400 h-10 rounded-md w-fit m-3">
-                  <Link to={`/blogs/${prevPost?._id}`}>
+                  <Link to={`/blogs/${prevPost?.[linkStruct]}`}>
                     <button
                       disabled={currentIndex === 0}
                       className="p-2 disabled:text-gray-400 mr-4"
@@ -212,7 +228,7 @@ export default function Post() {
                     </button>
                   </Link>
 
-                  <Link to={`/blogs/${nextPost?._id}`}>
+                  <Link to={`/blogs/${nextPost?.[linkStruct]}`}>
                     <button
                       disabled={currentIndex === data.length - 1}
                       className=" p-2 disabled:text-gray-400 ml-4"

@@ -26,7 +26,7 @@ export default function PostList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [peginateList, setPeginateList] = useState([]);
 
-  const { showAdminOnList = true, showDateOnList = true } =
+  const { showAdminOnList = true, showDateOnList = true, permalinkType = "title" } =
     useSettings()?.settings || {};
 
   useEffect(() => {
@@ -287,7 +287,7 @@ export default function PostList() {
                       </span>
                     )}
                   </div>
-                  <Link to={`/blogs/${item._id}`} key={item.id}>
+                  <Link to={`/blogs/${permalinkType === "title" ? item.slug : item._id}`}>
                     <p className=" line-clamp-4">{item.description}</p>
                     <h3 className=" font-semibold">Read More</h3>
                   </Link>
