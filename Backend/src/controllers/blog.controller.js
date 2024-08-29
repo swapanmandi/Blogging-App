@@ -4,7 +4,6 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Blog } from "../models/blog.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import redis from "../utils/redis.js";
-import { Await } from "react-router-dom";
 
 // ad create post
 
@@ -66,14 +65,24 @@ const createBlog = asyncHandler(async (req, res) => {
 // ad published post list
 
 const allPostList = asyncHandler(async (req, res) => {
-  const blog = await Blog.find({ user: req.user._id, status: "active" });
-  if (!blog) {
-    throw new ApiError(400, "Error to find and edit blog");
-  }
+  let posts = await redis.get("admin_posts");
 
-  res
+  if (posts) {
+    posts = JSON.parse(posts);
+  } else {
+     posts = await Blog.find({ user: req.user._id, status: "active" }).select(" -status -slug ");
+
+    if (!posts) {
+      throw new ApiError(400, "Error to find and edit blog");
+    }
+
+    await redis.set("admin_posts", JSON.stringify(posts), "EX", 3600);
+  }
+  return res
     .status(200)
-    .json(new ApiResponse(200, blog, "Blog edit list fetched successfully."));
+    .json(
+      new ApiResponse(200, posts, "Published posts list fetched successfully.")
+    );
 });
 
 //ad draft post
@@ -107,7 +116,6 @@ const editView = asyncHandler(async (req, res) => {
 //ad edit blog
 
 const editPost = asyncHandler(async (req, res) => {
-
   const admin = req.user?.role;
   if (admin !== "admin") {
     throw new ApiError(401, "You are not a admin.");
@@ -151,7 +159,6 @@ const editPost = asyncHandler(async (req, res) => {
 // ad delete post
 
 const deletePost = asyncHandler(async (req, res) => {
-
   const admin = req.user?.role;
   if (admin !== "admin") {
     throw new ApiError(401, "You are not a admin.");
@@ -206,7 +213,6 @@ const getBlogList = asyncHandler(async (req, res) => {
       );
   }
 });
-
 
 // popular posts
 
