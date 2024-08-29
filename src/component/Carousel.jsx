@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useRef } from "react";
-import { PostContext } from "../store/PostContext-store";
+import { usePostContext } from "../store/PostContext-store";
 
 export default function Carousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [caroLength, setCaroLength] = useState(5)
   const slideIntervalRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
 
-  const { posts } = useContext(PostContext);
+  const { posts } = usePostContext();
 
   // const card = [
   //   { title: "First Post" },
@@ -17,10 +18,10 @@ export default function Carousel() {
   //   { title: "Fifth Post" },
   // ];
 
-  const CarouselData = posts.slice(0, 5);
+  const CarouselData = posts.slice(0, caroLength);
 
   const len = CarouselData.length;
-
+ 
   const nextSlide = () => {
     setCurrentIndex(currentIndex === len - 1 ? 0 : currentIndex + 1);
   };
@@ -46,13 +47,14 @@ export default function Carousel() {
   };
   return (
     <>
-      <div className=" lg:h-60 lg:w-11/12 bg-slate-500 rounded-md m-4 lg:flex lg:justify-center lg:items-center">
+      <div className=" w-11/12 lg:h-60 lg:w-11/12 bg-slate-500 rounded-md m-4 lg:flex lg:items-center lg:justify-between">
+      <button className=" mx-3" onClick={prevSlide}>{`<<`}</button>
         <div
           className=" m-2 rounded cursor-pointer"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <div className=" flex justify-center items-center">
+          <div className=" overflow-hidden flex flex-col p-3 lg:flex-row justify-center items-center">
             <img
               src={`${CarouselData[currentIndex]?.featuredImage}`}
               className=" h-40 w-36"
@@ -68,11 +70,16 @@ export default function Carousel() {
            
           </div>
           <div className=" flex justify-center ">
-          <button className=" mx-3" onClick={prevSlide}>Prev</button> <br></br>
-          <button className=" mx-3" onClick={nextSlide}>Next</button>
+            {Array.from({length: len}, (_, index) => index+1).map(item => (
+              <>
+              
+             <span className={` ${currentIndex === item - 1 ? ' bg-green-500' : 'bg-white'} h-2 w-2 m-1 rounded-full`}></span>
+              </>
+            ))}
+      
           </div>
-         
         </div>
+        <button className=" mx-3" onClick={nextSlide}>{`>>`}</button>
       </div>
     </>
   );
