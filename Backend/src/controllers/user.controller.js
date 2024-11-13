@@ -118,7 +118,7 @@ const signinUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: false,
+    secure: true,
   };
   res
     .cookie("accessToken", accessToken, options)
@@ -166,7 +166,7 @@ const adminSignin = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: false,
+    secure: true,
   };
 
   res
