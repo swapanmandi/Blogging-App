@@ -3,6 +3,13 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import userRoter from './routes/user.route.js'
 import blogRouter from './routes/blog.route.js'
+import likeRouter from './routes/like.route.js'
+import commentRouter from './routes/comment.route.js'
+import readLaterRouter from "./routes/readLater.route.js"
+import categoryRouter from "./routes/category.routes.js"
+import messageRouter from './routes/message.routes.js'
+import settingRouter from './routes/setting.routes.js'
+
 
 const app = express()
 
@@ -19,6 +26,7 @@ app.use(express.urlencoded({
 }))
 
 app.use(express.json({limit: '16kb'}))
+app.use(express.static("public"))
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
@@ -32,5 +40,9 @@ app.use((err, req, res, next) => {
 
 app.use("/", userRoter)
 app.use("/blog", blogRouter)
+app.use("/app", likeRouter, categoryRouter, messageRouter )
+app.use("/api", commentRouter)
+app.use("/app/blog",readLaterRouter)
+app.use("/app/admin", settingRouter)
 
 export {app}

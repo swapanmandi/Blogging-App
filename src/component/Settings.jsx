@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { AuthContext } from "../store/AuthContext.jsx";
+import {  useAuth } from "../store/AuthContext.jsx";
 
 export default function Settings() {
   const [accountInfo, setAccountInfo] = useState([]);
@@ -29,7 +29,7 @@ export default function Settings() {
 
   const { register, resetField, handleSubmit } = useForm();
 
-  const { signout } = useContext(AuthContext);
+  const { signout } = useAuth()
 
   const handlePerosonalInfo = async () => {
     setIsClickedAccInfo(true);

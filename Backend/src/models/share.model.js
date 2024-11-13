@@ -4,11 +4,13 @@ import mongoose, { mongo } from "mongoose";
 const shareSchema = new mongoose.Schema({
 post:{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Blog"
+    ref: "Blog",
+    
 },
 sharedBy:{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
+   
 }
 }, {timestamps: true})
 

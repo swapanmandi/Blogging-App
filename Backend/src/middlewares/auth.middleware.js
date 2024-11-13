@@ -21,7 +21,7 @@ const verifyJWT = async(req,_,next) =>{
     req.user = user
     next()
     } catch (error) {
-        throw new ApiError(400, "Invalid Access Token" || error?.message)
+        next(new ApiError(400, "Invalid Access Token" || error?.message))
     }
 
 }

@@ -48,7 +48,7 @@ export default function DraftList() {
             key={item._id}
           >
             <h3 className="">
-              <Link to={`/admin/dashboard/blog/api/edit/${item._id}`}>
+              <Link to={`/admin/dashboard/blog/post/edit/${item._id}`}>
                 {item.title}
               </Link>
             </h3>

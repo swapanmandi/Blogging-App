@@ -8,10 +8,12 @@ import axios from "axios";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
+
 export default function CreatePost() {
   const [post, setPost] = useState(null);
   const [tag, setTag] = useState("");
   const [tagList, setTagList] = useState([]);
+  const [categories, setCategories] = useState([])
   const { id } = useParams();
 
   useEffect(() => {
@@ -64,8 +66,11 @@ export default function CreatePost() {
     formData.append("slug", data.slug);
     formData.append("description", data.description);
     formData.append("content", data.content);
-    formData.append("category", data.category);
     formData.append("status", data.status);
+
+    data.category.forEach((item, index) =>{
+      formData.append(`category[${index}]`, item);
+    })
     tagList.forEach((item, index) => {
       formData.append(`tags[${index}]`, item);
     });
@@ -74,7 +79,8 @@ export default function CreatePost() {
       formData.append("featuredImage", data.featuredImage[0]);
     }
 
-    //console.log("data", formData.get("featuredImage"));
+    console.log("category:", formData.get("category"));
+    console.log("tags:", formData.get("tags"));
 
     // for (let [key, value] of formData.entries()) {
     //   console.log(`${key}:`, value);
@@ -148,12 +154,34 @@ export default function CreatePost() {
     setTagList(tagList.filter((item) => item !== tag));
   };
 
+  useEffect(() => {
+    const getCategories = async () => {
+      const result = await axios.get("http://localhost:3000/app/get/category", {
+        withCredentials: true,
+      });
+
+      setCategories(result.data.data);
+    };
+    getCategories();
+  }, []);
+
   return (
     <>
-      <div className="flex flex-col p-3 text-white">
-        <div>
+    <div className=" absolute h-12 w-full bg-orange-200">
+
+      <div>
+        <ul className=" flex justify-around">
+          <li>Save Draft</li>
+          <li>Publish</li>
+          <li>Score</li>
+        </ul>
+      </div>
+
+    </div>
+      <div className=" bg-red-200  w-full flex mt-16 text-black">
+        
           <form
-            className="flex w-9/12 flex-col"
+            className="flex w-9/12 p-3 flex-col"
             onSubmit={handleSubmit(submit)}
           >
             <Input
@@ -185,11 +213,27 @@ export default function CreatePost() {
               {...register("description", { required: true })}
             />
 
-            <Select
+            <div>
+            
+            </div>
+
+            {/* <Select
               label="Category:"
               {...register("category", { required: true })}
               options={["Category1", "Category2", "Category3"]}
-            />
+            /> */}
+{categories?.map( item => (
+  <div className=" flex">
+    {item.category?.map(item => (
+      <div className=" bg-sky-300 p-1 m-1 w-fit flex" key={item}><span className=" m-2">{item}</span>
+      <Input key={item} type="checkbox" value={item} {...register("category", {required: true})}/>
+      </div>
+      
+    ))}
+    
+  </div>
+))}
+          
 
             <div className="flex">
               <label>
@@ -255,7 +299,10 @@ export default function CreatePost() {
               {post ? "Update" : "Submit"}
             </Button>
           </form>
-        </div>
+          <div className=" bg-slate-400 h-full w-1/4">
+
+          </div>
+       
         <ToastContainer />
       </div>
     </>

@@ -1,30 +1,50 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export default function Comment() {
+export default function Comment({postId}) {
 const [comment, setComment] = useState("")
+const [getComments, setGetComments] = useState(null)
+const [commentCount, setCommentCount] = useState(0)
 
   const handleCommentInput = (e) =>{
 setComment(e.target.value)
   }
 
   const handleCommentBtn = async() =>{
-await axios.post("http://localhost:3000/app/post/comment", {},{
+await axios.post(`http://localhost:3000/api/post/comment/${postId}`, {content: comment},{
   withCredentials: true
 })
+setComment("")
   }
+
+ useEffect(() =>{
+  const handleGetComments = async() =>{
+    const result = await axios.get(`http://localhost:3000/api/post/comments/${postId}`,{
+      withCredentials: false
+    })
+    //console.log("comments", result.data.data)
+setGetComments(result.data.data.comments)
+setCommentCount(result.data.data.totalComments)
+  }
+  handleGetComments()
+ }, [comment])
+
   return (
     <>
       <div>
         <div className=" m-3 p-1 border-slate-400 border-2 rounded-md">
-          <h3 className=" font-semibold p-1">Comments</h3>
+          <h3 className=" font-semibold p-1">Comments {commentCount}</h3>
 
-          <div className="flex items-center">
-            <span className=" bg-slate-500 rounded-sm pr-1">👨 Mr. John</span>
+       
+           {getComments?.map(item => (
+            <div className="flex items-center" key={item._id}>
+               <span className=" bg-slate-500 rounded-sm pr-1">👨 {item.commentedBy?.fullName}</span>
             <p className=" p-1 bg-slate-300 rounded-sm m-2">
-              This is very interesting story!
+             {item.content}
             </p>
-          </div>
+            </div>
+           ))}
+         
 
           <div>
             <input

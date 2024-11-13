@@ -24,7 +24,7 @@ router.route("/api/createBlog").post( upload.fields([{name: "featuredImage", max
 router.route("/list").get(getBlogList);
 router.route("/api/allPostList").get(verifyJWT, allPostList)
 router.route("/api/editView/:id").get(verifyJWT, editView);
-router.route("/api/edit/:id").put( upload.fields([{name: "featuredImage", maxCount: 1}]), verifyJWT, editPost);
+router.route("/post/edit/:id").put( upload.fields([{name: "featuredImage", maxCount: 1}]), verifyJWT, editPost);
 router.route("/api/delete/:id").delete(verifyJWT, deletePost);
 router.route("/api/draftpost").get(verifyJWT, draftPosts)
 router.route("/popular-posts").get(popularPosts)

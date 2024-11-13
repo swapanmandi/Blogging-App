@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
-
+import {useAuth } from "../store/AuthContext.jsx";
 
 export default function SavedPosts() {
   const [loading, setLoading] = useState(true);
   const [savedPosts, setSavedPosts] = useState(null);
+
+  const {user} = useAuth()
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -26,7 +28,8 @@ export default function SavedPosts() {
         setLoading(false);
       }
     };
-    fetchPosts();
+
+    user ? fetchPosts() : setLoading(false);
   }, []);
 
 

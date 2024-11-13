@@ -1,12 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import useTheme from "../store/ThemeContext";
 import SearchBar from "./SearchBar.jsx";
+import { useAuth } from "../store/AuthContext.jsx";
 
 const Navbar = () => {
   const { themeMode, lightTheme, darkTheme } = useTheme();
   const [isOpened, setIsOpened] = useState(false);
   const [searchBtn, setSearchBtn] = useState(false);
+
+  const { token, user } = useAuth();
 
   const handleMode = (e) => {
     const darkModeStatus = e.currentTarget.checked;
@@ -88,11 +91,11 @@ const Navbar = () => {
                 </li>
               </Link>
 
-              <Link to="/blogs">
+              {/* <Link to="/blogs">
                 <li className="mx-3 w-10/12 bg-emerald-600 rounded-md p-1">
                   Blogs
                 </li>
-              </Link>
+              </Link> */}
 
               <Link to="/latest">
                 <li className="mx-3 w-10/12 bg-emerald-600 rounded-md p-1">
@@ -119,9 +122,15 @@ const Navbar = () => {
               </Link>
             </ul>
 
-            <div className=" font-bold bg-red-300 p-1 px-3 rounded-md">
-              <Link to="/admin">Profile</Link>
-            </div>
+            {user && token ? (
+              <div className=" font-bold bg-red-300 p-1 px-3 rounded-md">
+                <Link to={"/settings"}>Settings</Link>
+              </div>
+            ) : (
+              <div className=" font-bold bg-red-300 p-1 px-3 rounded-md">
+                <Link to="/signup">Sign Up</Link>
+              </div>
+            )}
           </div>
         </div>
       </nav>

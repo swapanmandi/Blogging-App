@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { usePostContext } from "../store/PostContext-store.jsx";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import MainSidebar from "../component/MainSidebar.jsx";
@@ -10,7 +10,7 @@ import axios from "axios";
 import Comment from "../component/Comment.jsx";
 import SavedPosts from "../component/SavedPosts.jsx";
 import { useSettings } from "../store/SettingsContext.jsx";
-import { AuthContext } from "../store/AuthContext.jsx";
+import { useAuth } from "../store/AuthContext.jsx";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -24,7 +24,7 @@ export default function Post() {
   const [totalLikes, setTotalLikes] = useState(0);
   const [totalViews, setTotalViews] = useState(0);
 
-  const { isAuthenticated } = useContext(AuthContext);
+  const { user } = useAuth()
 
   const { postId } = useParams();
 
@@ -92,13 +92,13 @@ export default function Post() {
       setIsLiked(result.data.data.status);
       setTotalLikes(result.data.data.noOfLikes);
     };
-    isAuthenticated && handleLikeStatus();
+    user && handleLikeStatus();
   }, [postId]);
 
   //like api
 
   const postLike = async () => {
-    if (!isAuthenticated) {
+    if (!user) {
       toast("You have not Logged in.");
       return;
     }
@@ -129,7 +129,7 @@ export default function Post() {
       );
       setTotalViews(result.data.data.views);
     };
-    isAuthenticated && views();
+    user && views();
   }, []);
 
   // fetch initial save status
@@ -142,7 +142,7 @@ export default function Post() {
       );
       setIsSaved(result.data.data.status);
     };
-    isAuthenticated && checkSavedStatus();
+    user && checkSavedStatus();
   }, [postId]);
 
   // save post

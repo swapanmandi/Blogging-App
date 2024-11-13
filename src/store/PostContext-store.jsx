@@ -1,7 +1,7 @@
 import axios from "axios";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 
-export const PostContext = createContext();
+const PostContext = createContext();
 
 const PostContextProvider = ({ children }) => {
   const [posts, setPosts] = useState([]);
@@ -13,12 +13,10 @@ const PostContextProvider = ({ children }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 250));
         //const response = await axios.get("../src/../backend/posts.json");
-        const response = await axios.get("http://localhost:3000/blog/list", {
-          withCredentials: false,
-        });
-        console.log("post api data", response.data.data);
+        const response = await axios.get("http://localhost:3000/blog/list");
+        console.log(response.data.message);
         setPosts(response.data.data);
       } catch {
         (error) => {
@@ -44,6 +42,23 @@ const PostContextProvider = ({ children }) => {
     }
   }, [posts, searchQuery]);
 
+
+  const formatdDate = (e) => {
+    const date = new Date(e);
+    const dd = date.getDate();
+    const mm = date.getMonth() + 1;
+    const yyyy = date.getFullYear();
+    return `${dd}-${mm}-${yyyy}`;
+  };
+
+  const formatTime = (e) =>{
+    const time = new Date()
+    const minutes = time.getMinutes()
+    const hours = time.getHours()
+    
+    return `${hours}:${minutes} `
+  }
+
   return (
     <PostContext.Provider
       value={{
@@ -54,11 +69,18 @@ const PostContextProvider = ({ children }) => {
         searchQuery,
         setSearchQuery,
         displayPost,
+        formatdDate
       }}
     >
       {children}
     </PostContext.Provider>
   );
+};
+
+export const usePostContext = () => {
+  const context = useContext(PostContext);
+
+  return context;
 };
 
 export default PostContextProvider;

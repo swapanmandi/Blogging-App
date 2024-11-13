@@ -49,13 +49,13 @@ export default function ShareModal({ postUrl, postTitle, onClose }) {
           X
         </span>
         <div className=" flex flex-col items-start p-3 space-y-2">
-          <button onClick={handleCopyBtn}>
-            {isCopiedURL ? 'Copied' : "Copy"}
+          <button className="" onClick={handleCopyBtn}>📋
+            {isCopiedURL ? ' Copied' : " Copy"}
           </button>
-          <button onClick={() => handleShareClick("facebook")}>Facebook</button>
+          <button onClick={() => handleShareClick("facebook")}>ⓕ Facebook</button>
           <button onClick={() => handleShareClick("linkedin")}>LinkedIn</button>
           <button onClick={() => handleShareClick("whatsapp")}>Whatsapp</button>
-          <button onClick={() => handleShareClick("twitter")}>X</button>
+          <button onClick={() => handleShareClick("twitter")}>𝕏 X</button>
         </div>
       </div>
     </>

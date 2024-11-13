@@ -3,11 +3,11 @@ import React from 'react'
 export default function() {
   return (
     <>
-    <div className=' sm:text-left md:text-center'>
+    <div className=' sm:text-left md:text-center h-screen flex justify-center'>
         
-<div>
+<div className=' flex flex-col p-3 dark:bg-slate-900 bg-slate-300 dark:text-white lg:w-10/12'>
 
-<h1>About<b>Blogging App</b></h1>
+<h1 className=' m-2'>About <b>Blogging App</b></h1>
 <p> Welcome to <b>Blogging App</b> where we share information related to . We're dedicated to providing you the very best information and knowledge of the above mentioned topics. Our about us page is generated with the help of <a href="https://raptorkit.com/about-us-page-generator" >About Us Page Generator</a></p>
 
 <p>We hope you found all of the information on <b>Blogging App</b> helpful, as we love to share them with you.</p>

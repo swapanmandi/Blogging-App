@@ -9,8 +9,8 @@ export default function Breadcrums() {
 
   return (
     <>
-      <div className=" p-2 ml-3 font-serif dark:text-white">
-        <span>{breadcrums === "" ? "Home" : `Home/${breadcrums}`}</span>
+      <div className=" p-1 ml-3 font-serif dark:text-white">
+        <span className=" text-xs">{breadcrums === "" ? "Home" : `Home/${breadcrums}`}</span>
       </div>
     </>
   );

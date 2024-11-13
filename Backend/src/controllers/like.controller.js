@@ -52,7 +52,6 @@ const togglePostLike = asyncHandler(async (req, res) => {
         );
     }
 
-    res.status(200).json(new ApiResponse(200, {}, "Liked successfully"));
   } catch (error) {
     throw new ApiError(400, "Error to Like or dislike the post");
   }

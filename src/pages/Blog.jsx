@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { PostContext } from "../store/PostContext-store";
+import { usePostContext } from "../store/PostContext-store";
 
 export default function Blog() {
-  const { posts } = useContext(PostContext);
   
-  const { loading } = useContext(PostContext);
+  const { posts, loading } = usePostContext();
 
   //for pegination
 
@@ -59,9 +58,9 @@ export default function Blog() {
           </button>
 
           {pegiList.map((item) => (
-            <div className=" text-center flex  items-center">
+            <div className=" text-center flex  items-center"  key={item}>
               <button
-                key={item}
+               
                 className={`p-3 text ${
                   item === currentPage && "text-amber-600"
                 }`}

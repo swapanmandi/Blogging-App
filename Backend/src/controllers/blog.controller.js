@@ -192,7 +192,7 @@ const getBlogList = asyncHandler(async (req, res) => {
   } else {
     const posts = await Blog.find({
       status: "active",
-    }).select(" -status -slug");
+    }).select(" -status");
 
     //console.log(posts)
 

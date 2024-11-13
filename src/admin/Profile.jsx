@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { AuthContext } from "../store/AuthContext.jsx";
+import { useAuth } from "../store/AuthContext.jsx";
 
 export default function Profile() {
   const [avatar, setAvatar] = useState(null);
@@ -24,7 +24,8 @@ export default function Profile() {
   const { register: registerPassword, handleSubmit: handleSubmitPassword } =
     useForm();
 
-  const { signout } = useContext(AuthContext);
+  const { signout, check } = useAuth();
+  
 
   const clickAccInfo = () => {
     setShowAccInfo(true);
@@ -125,7 +126,7 @@ export default function Profile() {
 
   useEffect(() => {
     const profile = async () => {
-      const result = await axios.get("http://localhost:3000/profile", {
+      const result = await axios.get("http://localhost:3000/admin/profile", {
         withCredentials: true,
       });
       setProfileInfo(result.data.data);
@@ -133,6 +134,10 @@ export default function Profile() {
     };
     profile();
   }, []);
+
+  const handleSignout = () => {
+    signout();
+  };
   return (
     <>
       <div className=" w-full items-center flex justify-center overflow-hidden">
@@ -148,7 +153,7 @@ export default function Profile() {
               General Settings
             </li>
             <li
-              onClick={signout}
+              onClick={handleSignout}
               className=" bg-slate-500 w-fit p-1 m-2 rounded-md cursor-pointer"
             >
               Sign Out
@@ -188,22 +193,21 @@ export default function Profile() {
 
               <div className=" w-full m-2 flex justify-between items-center">
                 <div className="">
-                <h2>Name: {profileInfo?.fullName} </h2>
-                <h2>Email: {profileInfo?.email} </h2>
-
-                  </div>
+                  <h2>Name: {profileInfo?.fullName} </h2>
+                  <h2>Email: {profileInfo?.email} </h2>
+                </div>
                 <button
-                className=" bg-slate-500 h-fit w-fit p-1 rounded-md "
-                onClick={editPersonanInfo}
-              >
-                Edit
-              </button>
+                  className=" bg-slate-500 h-fit w-fit p-1 rounded-md "
+                  onClick={editPersonanInfo}
+                >
+                  Edit
+                </button>
               </div>
-              
             </div>
             <div className=" flex justify-between">
               <h2>
-                Password: <input className="" placeholder="******" disabled></input>
+                Password:{" "}
+                <input className="" placeholder="******" disabled></input>
               </h2>
               <button
                 onClick={editPassowrd}
@@ -259,9 +263,10 @@ export default function Profile() {
 
         {editingPassword && (
           <div className=" absolute bg-lime-300 p-2  rounded-md">
-           
-            <form onSubmit={handleSubmitPassword(saveEditPassword)}
-            className=" flex flex-col">
+            <form
+              onSubmit={handleSubmitPassword(saveEditPassword)}
+              className=" flex flex-col"
+            >
               <label>
                 Old Password:
                 <input

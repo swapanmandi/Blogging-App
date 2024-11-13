@@ -10,8 +10,19 @@ export default {
       "xs": "320px",
       "lg": "1024px"
     },
-    extend: {},
+    extend: {
+      keyframes:{
+        swipeRight:{
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' },
+        }
+      },
+      animation:{
+        swipeRight: 'swipeRight 0.5s ease-out forwards',
+      }
+    },
   },
+  
   plugins: [],
 }
 

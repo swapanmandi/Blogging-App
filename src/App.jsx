@@ -6,6 +6,10 @@ import { Outlet } from "react-router-dom";
 import PostContextProvider from "./store/PostContext-store";
 import { ThemeContextProvider } from "./store/ThemeContext";
 import Breadcrums from "./component/Breadcrums.jsx";
+import { AuthProvider } from "./store/AuthContext.jsx"; 
+import { SettingsProvider } from "./store/SettingsContext.jsx";
+
+
 
 function App() {
   const [themeMode, setThemeMode] = useState(() =>{
@@ -31,14 +35,18 @@ function App() {
   }, [themeMode]);
 
   return (
+    <AuthProvider>
     <PostContextProvider>
+      <SettingsProvider>
       <ThemeContextProvider value={{ themeMode, lightTheme, darkTheme }}>
         <Navbar />
         <Breadcrums />
         <Outlet />
         <Footer />
       </ThemeContextProvider>
+      </SettingsProvider>
     </PostContextProvider>
+    </AuthProvider>
   );
 }
 

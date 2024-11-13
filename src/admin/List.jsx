@@ -18,7 +18,6 @@ export default function List() {
       toast(response.message);
       console.log("li", response.data.data);
       setEditList(response.data.data);
-      
     };
     list();
   }, [isDeleted]);
@@ -40,23 +39,36 @@ export default function List() {
     }
   };
 
+  const formatDate = (e) => {
+   const date = new Date(e)
+    const dd = date.getDate().toString().padStart(2, '0');
+    const mm = (date.getMonth() + 1).toString().padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+   
+  };
+
   return (
     <>
-      <div className=" w-full h-screen bg-slate-800">
+      <div className=" w-full h-fit min-h-screen bg-slate-800">
+        <div className=" h-fit text-black bg-slate-400 p-1 w-full m-1 flex justify-around mb-4">
+          <h3 className=" w-80">Title</h3>
+          <span>Published Date</span>
+          <div className=" w-60">Category</div>
+          <span>Edit</span>
+          <span className=" cursor-pointer">Delete</span>
+        </div>
+
         {editList?.map((item) => (
           <div
-            className=" h-10 bg-red-600 rounded-md p-1 w-full m-3 flex justify-around"
+            className=" h-fit text-black bg-slate-300  p-1 w-full m-1 my-2 flex justify-around"
             key={item._id}
           >
-            <h3 className="">
-              <Link to={`/admin/dashboard/blog/api/edit/${item._id}`}>
-                {item.title}
-              </Link>
-            </h3>
-            <span>{item.status}</span>
-            <span>{item.category}</span>
+            <h3 className=" w-80">{item.title}</h3>
+            <span>{formatDate(item.publishedAt)}</span>
+            <div className=" w-60"><span className="">{item.category}</span></div>
             <span>
-              <Link to={`/admin/dashboard/blog/api/edit/${item._id}`}>
+              <Link to={`/admin/dashboard/blog/post/edit/${item._id}`}>
                 Edit
               </Link>
             </span>
