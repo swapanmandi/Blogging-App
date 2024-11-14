@@ -118,8 +118,8 @@ const signinUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production,
-      sameSite: 'None'
+    secure: process.env.NODE_ENV === "production",
+      sameSite: "None"
   };
   res
     .cookie("accessToken", accessToken, options)
@@ -167,8 +167,8 @@ const adminSignin = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-   secure: process.env.NODE_ENV === "production,
-     sameSite: 'None'
+   secure: process.env.NODE_ENV === "production",
+     sameSite: "None"
   };
 
   res
