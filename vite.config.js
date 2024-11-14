@@ -9,7 +9,7 @@ export default defineConfig({
   },
   server:{
     proxy:{
-      '/api' : import.meta.env.VITE_BACKEND_API,
+      '/api' : "https://blogging-app-backend-dfio.onrender.com",
     },
   },
   plugins: [react()],
