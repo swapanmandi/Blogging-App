@@ -34,7 +34,7 @@ export default function Settings() {
   const handlePerosonalInfo = async () => {
     setIsClickedAccInfo(true);
     setShowDropdown(false);
-    const result = await axios.get(`${import.meta.env.VITE_BACKEND_API}/api/v1/profile`, {
+    const result = await axios.get(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/profile`, {
       withCredentials: true,
     });
     setAccountInfo(result.data.data);
@@ -62,7 +62,7 @@ export default function Settings() {
   const handleSaveAccInfo = async () => {
     try {
       const result = await axios.post(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/account-update`,
+        `${import.meta.env.VITE_BACKEND_API}/api/v1/user/account-update`,
         editingAccInfo,
         {
           withCredentials: true,
@@ -95,7 +95,7 @@ export default function Settings() {
     //   console.log(`${key}:`, value);
     // }
 
-    await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/avatar`, formData, {
+    await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/avatar`, formData, {
       withCredentials: true,
       headers: {
         "Content-Type": "multipart/form-data",
