@@ -74,14 +74,14 @@ export default function Carousel() {
           </div>
           <div className=" flex justify-center ">
             {Array.from({ length: len }, (_, index) => index + 1).map(
-              (item) => (
-                <>
+              (item, index) => (
+                <div key={index}>
                   <span
                     className={` ${
                       currentIndex === item - 1 ? " bg-green-500" : "bg-white"
                     } h-2 w-2 m-1 rounded-full`}
                   ></span>
-                </>
+                </div>
               )
             )}
           </div>

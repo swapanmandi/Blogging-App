@@ -9,7 +9,7 @@ export default defineConfig({
   },
   server:{
     proxy:{
-      '/api' : "https://blogging-app-backend-dfio.onrender.com",
+      '/api' : "https://blogpress-chiu.onrender.com",
     },
   },
   plugins: [react()],

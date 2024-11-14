@@ -11,9 +11,9 @@ const useSettings = () => useContext(SettingsContext);
 function SettingsProvider({ children }) {
   const [settings, setSettings] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { setLoading, token } = useAuth();
+  const { user, token } = useAuth();
 
-  //console.log(token)
+  
   useEffect(() => {
     const getSettings = async () => {
       setIsLoading(true);
@@ -34,7 +34,9 @@ function SettingsProvider({ children }) {
         setIsLoading(false);
       }
     };
-    getSettings();
+    if(user && token){
+      getSettings();
+    }
   }, []);
 
   return (

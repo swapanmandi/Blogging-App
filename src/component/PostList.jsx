@@ -26,7 +26,7 @@ export default function PostList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [peginateList, setPeginateList] = useState([]);
 
-  const { showAdminOnList = true, showDateOnList = true, permalinkType = "title" } =
+  const { showAdminOnList = true, showDateOnList = true, permalinkType = "id" } =
     useSettings()?.settings || {};
 
   useEffect(() => {

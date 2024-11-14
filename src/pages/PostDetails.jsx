@@ -41,7 +41,7 @@ export default function Post() {
     showAdminOnPost = true,
     showDateOnPost = true,
     showTimeOnPost = false,
-    permalinkType = "title",
+    permalinkType = "id",
   } = useSettings()?.settings || {};
 
  
@@ -55,7 +55,7 @@ export default function Post() {
     linkStruct = "_id";
   }
 
-  console.log("per type", permalinkType)
+  //console.log("per type", permalinkType)
   const viewPost = data.filter((item) => String(item?.[linkStruct]) === postId);
 
   console.log("post", viewPost);
