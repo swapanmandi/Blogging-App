@@ -9,7 +9,7 @@ export default defineConfig({
   },
   server:{
     proxy:{
-      '/api' : '*',
+      '/api' : meta.env.VITE_BACKEND_API,
     },
   },
   plugins: [react()],
