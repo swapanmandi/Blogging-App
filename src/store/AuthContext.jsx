@@ -32,6 +32,7 @@ function AuthProvider({ children }) {
     try {
       setLoading(true);
       const result = await axios.post(`${import.meta.env.VITE_BACKEND_API}/signin`, data, {
+        origin: import.meta.env.VITE_BACKEND_API,
         withCredentials: true,
       });
       setUser(result.data.data.user);
