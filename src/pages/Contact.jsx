@@ -10,7 +10,7 @@ export default function Contact() {
 
     const handleSendMessage = async(data) =>{
 
-      const result = await axios.post("http://localhost:3000/app/message",data,{withCredentials: true})
+      const result = await axios.post(`${meta.env.VITE_BACKEND_API}/app/message`,data,{withCredentials: true})
 
 
     }

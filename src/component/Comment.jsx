@@ -11,7 +11,7 @@ setComment(e.target.value)
   }
 
   const handleCommentBtn = async() =>{
-await axios.post(`http://localhost:3000/api/post/comment/${postId}`, {content: comment},{
+await axios.post(`${meta.env.VITE_BACKEND_API}/api/post/comment/${postId}`, {content: comment},{
   withCredentials: true
 })
 setComment("")
@@ -19,7 +19,7 @@ setComment("")
 
  useEffect(() =>{
   const handleGetComments = async() =>{
-    const result = await axios.get(`http://localhost:3000/api/post/comments/${postId}`,{
+    const result = await axios.get(`${meta.env.VITE_BACKEND_API}/api/post/comments/${postId}`,{
       withCredentials: false
     })
     //console.log("comments", result.data.data)

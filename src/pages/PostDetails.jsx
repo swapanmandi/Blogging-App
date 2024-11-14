@@ -84,7 +84,7 @@ export default function Post() {
   useEffect(() => {
     const handleLikeStatus = async () => {
       const result = await axios.get(
-        `http://localhost:3000/app/post/liked/${postId}`,
+        `${meta.env.VITE_BACKEND_API}/app/post/liked/${postId}`,
         {
           withCredentials: true,
         }
@@ -105,7 +105,7 @@ export default function Post() {
 
     try {
       const result = await axios.post(
-        `http://localhost:3000/app/post/like/${postId}`,
+        `${meta.env.VITE_BACKEND_API}/app/post/like/${postId}`,
         {},
         {
           withCredentials: true,
@@ -125,7 +125,7 @@ export default function Post() {
   useEffect(() => {
     const views = async () => {
       const result = await axios.get(
-        `http://localhost:3000/blog/post/views/${postId}`
+        `${meta.env.VITE_BACKEND_API}/blog/post/views/${postId}`
       );
       setTotalViews(result.data.data.views);
     };
@@ -137,7 +137,7 @@ export default function Post() {
   useEffect(() => {
     const checkSavedStatus = async () => {
       const result = await axios.get(
-        `http://localhost:3000/app/blog/post/saved-status/${postId}`,
+        `${meta.env.VITE_BACKEND_API}/app/blog/post/saved-status/${postId}`,
         { withCredentials: true }
       );
       setIsSaved(result.data.data.status);
@@ -149,7 +149,7 @@ export default function Post() {
 
   const savePost = async () => {
     const result = await axios.post(
-      `http://localhost:3000/app/blog/post/save-post/${postId}`,
+      `${meta.env.VITE_BACKEND_API}/app/blog/post/save-post/${postId}`,
       {},
       {
         withCredentials: true,

@@ -11,7 +11,7 @@ export default function DraftList() {
   useEffect(() => {
     const draftPost = async (req, res) => {
       const result = await axios.get(
-        "http://localhost:3000/blog/api/draftPost",
+        `${meta.env.VITE_BACKEND_API}/blog/api/draftPost`,
         {
           withCredentials: true,
         }
@@ -26,7 +26,7 @@ export default function DraftList() {
   const handleDelete = async (id) => {
   try {
       const result = await axios.delete(
-        `http://localhost:3000/blog/api/delete/${id}`,
+        `${meta.env.VITE_BACKEND_API}/blog/api/delete/${id}`,
         {
           withCredentials: true,
         }

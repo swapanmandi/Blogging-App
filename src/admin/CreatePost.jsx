@@ -20,7 +20,7 @@ export default function CreatePost() {
     if (id) {
       const editPost = async () => {
         const response = await axios.get(
-          `http://localhost:3000/blog/api/editView/${id}`,
+          `${meta.env.VITE_BACKEND_API}/blog/api/editView/${id}`,
           {
             withCredentials: true,
           }
@@ -89,7 +89,7 @@ export default function CreatePost() {
     try {
       if (post) {
         const result = await axios.put(
-          `http://localhost:3000/blog/post/edit/${id}`,
+          `${meta.env.VITE_BACKEND_API}/blog/post/edit/${id}`,
           formData,
           {
             withCredentials: true,
@@ -101,7 +101,7 @@ export default function CreatePost() {
         toast(result.data.message);
       } else {
         await axios.post(
-          "http://localhost:3000/blog/api/createBlog",
+         `${meta.env.VITE_BACKEND_API}/blog/api/createBlog`,
           formData,
           {
             withCredentials: true,
@@ -156,7 +156,7 @@ export default function CreatePost() {
 
   useEffect(() => {
     const getCategories = async () => {
-      const result = await axios.get("http://localhost:3000/app/get/category", {
+      const result = await axios.get(`${meta.env.VITE_BACKEND_API}/app/get/category`, {
         withCredentials: true,
       });
 

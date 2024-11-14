@@ -19,7 +19,7 @@ function SettingsProvider({ children }) {
       setIsLoading(true);
       try {
         const result = await axios.get(
-          "http://localhost:3000/app/admin/get-settings",
+          `${meta.env.VITE_BACKEND_API}/app/admin/get-settings`,
           {
             withCredentials: true,
           }

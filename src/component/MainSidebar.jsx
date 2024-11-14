@@ -13,7 +13,7 @@ export default function MainSidebar() {
     const fetchPosts = async () => {
       try {
         const trendingResult = await axios.get(
-          "http://localhost:3000/blog/trending-posts"
+          `${meta.env.VITE_BACKEND_API}/blog/trending-posts`
         );
 
         setTrendPosts(trendingResult.data.data);

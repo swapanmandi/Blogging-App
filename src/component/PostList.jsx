@@ -112,7 +112,7 @@ export default function PostList() {
   useEffect(() => {
     const handlePopularPosts = async () => {
       const result = await axios.get(
-        "http://localhost:3000/blog/popular-posts"
+        `${meta.env.VITE_BACKEND_API}/blog/popular-posts`
       );
       setPopularPosts(result.data.data);
     };
