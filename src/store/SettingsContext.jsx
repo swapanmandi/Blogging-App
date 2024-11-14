@@ -19,7 +19,7 @@ function SettingsProvider({ children }) {
       setIsLoading(true);
       try {
         const result = await axios.get(
-          `${meta.env.VITE_BACKEND_API}/app/admin/get-settings`,
+          `${import.meta.env.VITE_BACKEND_API}/app/admin/get-settings`,
           {
             withCredentials: true,
           }

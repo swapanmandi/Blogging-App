@@ -15,7 +15,7 @@ const PostContextProvider = ({ children }) => {
       try {
         await new Promise((resolve) => setTimeout(resolve, 250));
         //const response = await axios.get("../src/../backend/posts.json");
-        const response = await axios.get(`${meta.env.VITE_BACKEND_API}/blog/list`);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_API}/blog/list`);
         console.log(response.data.message);
         setPosts(response.data.data);
       } catch {

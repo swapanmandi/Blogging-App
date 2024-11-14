@@ -57,7 +57,7 @@ export default function Profile() {
 
     formData.append("avatar", data.avatar[0]);
 
-    await axios.post(`${meta.env.VITE_BACKEND_API}/avatar`, formData, {
+    await axios.post(`${import.meta.env.VITE_BACKEND_API}/avatar`, formData, {
       withCredentials: true,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -84,7 +84,7 @@ export default function Profile() {
   const SaveEditPersonalInfo = async (data) => {
     try {
       const result = await axios.post(
-        `${meta.env.VITE_BACKEND_API}/account-update`,
+        `${import.meta.env.VITE_BACKEND_API}/account-update`,
         { fullName: data.fullName, email: data.email },
         {
           withCredentials: true,
@@ -106,7 +106,7 @@ export default function Profile() {
   const saveEditPassword = async (data) => {
     try {
       await axios.post(
-        `${meta.env.VITE_BACKEND_API}/password-change`,
+        `${import.meta.env.VITE_BACKEND_API}/password-change`,
         { oldPassword: data.oldPassword, newPassword: data.newPassword },
         {
           withCredentials: true,
@@ -126,7 +126,7 @@ export default function Profile() {
 
   useEffect(() => {
     const profile = async () => {
-      const result = await axios.get(`${meta.env.VITE_BACKEND_API}/admin/profile`, {
+      const result = await axios.get(`${import.meta.env.VITE_BACKEND_API}/admin/profile`, {
         withCredentials: true,
       });
       setProfileInfo(result.data.data);

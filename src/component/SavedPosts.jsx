@@ -14,7 +14,7 @@ export default function SavedPosts() {
     const fetchPosts = async () => {
       try {
         const savedResult = await axios.get(
-          `${meta.env.VITE_BACKEND_API}/app/blog/posts/saved-posts`,
+          `${import.meta.env.VITE_BACKEND_API}/app/blog/posts/saved-posts`,
           {
             withCredentials: true,
           }
