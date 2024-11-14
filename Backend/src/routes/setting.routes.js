@@ -6,7 +6,7 @@ import { upload } from "../middlewares/multer.middleware.js";
 const router = Router();
 
 router
-  .route("/setting")
+  .route("/set-setting")
   .post(upload.fields([{ name: "siteIcon", maxCount: 1 }]), verifyJWT, setting);
 router.route("/get-settings").get(verifyJWT, getSettings);
 

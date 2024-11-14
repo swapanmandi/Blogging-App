@@ -31,7 +31,7 @@ function AuthProvider({ children }) {
   const signin = async (data) => {
     try {
       setLoading(true);
-      const result = await axios.post(`${import.meta.env.VITE_BACKEND_API}/signin`, data, {
+      const result = await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/signin`, data, {
         origin: import.meta.env.VITE_BACKEND_API,
         withCredentials: true,
       });
@@ -52,7 +52,7 @@ function AuthProvider({ children }) {
 
   const signupAdmin = async (data) => {
     try {
-      await axios.post(`${import.meta.env.VITE_BACKEND_API}/admin/signup`, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/admin/signup`, {
         fullName: data.fullName,
         email: data.email,
         password: data.password,
@@ -67,7 +67,7 @@ function AuthProvider({ children }) {
   const signinAdmin = async (data) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_API}/admin/signin`,
+        `${import.meta.env.VITE_BACKEND_API}/api/v1/user/admin/signin`,
         { email: data.email, password: data.password },
         {
           withCredentials: true,
@@ -92,7 +92,7 @@ function AuthProvider({ children }) {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_API}/signout`,
+        `${import.meta.env.VITE_BACKEND_API}/api/v1/user/signout`,
         {},
         {
           withCredentials: true,
@@ -127,7 +127,7 @@ function AuthProvider({ children }) {
     //console.log("signup data", data)
     try {
       setLoading(true);
-      await axios.post(`${import.meta.env.VITE_BACKEND_API}/signup`, data, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/signup`, data, {
         withCredentials: false,
       });
       navigate("/signin");

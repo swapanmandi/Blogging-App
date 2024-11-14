@@ -20,7 +20,7 @@ export default function CreatePost() {
     if (id) {
       const editPost = async () => {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/api/editView/${id}`,
+          `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/editView/${id}`,
           {
             withCredentials: true,
           }
@@ -101,7 +101,7 @@ export default function CreatePost() {
         toast(result.data.message);
       } else {
         await axios.post(
-         `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/api/createBlog`,
+         `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/createBlog`,
           formData,
           {
             withCredentials: true,

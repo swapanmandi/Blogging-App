@@ -11,7 +11,7 @@ export default function DraftList() {
   useEffect(() => {
     const draftPost = async (req, res) => {
       const result = await axios.get(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/api/draftPost`,
+        `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/draftPost`,
         {
           withCredentials: true,
         }
@@ -26,7 +26,7 @@ export default function DraftList() {
   const handleDelete = async (id) => {
   try {
       const result = await axios.delete(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/api/delete/${id}`,
+        `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/delete/${id}`,
         {
           withCredentials: true,
         }

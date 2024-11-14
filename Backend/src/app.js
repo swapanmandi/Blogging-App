@@ -47,8 +47,9 @@ app.use(
   likeRouter,
   categoryRouter,
   messageRouter,
-  readLaterRouter
+  readLaterRouter,
+  commentRouter
 );
-app.use("/api/v1/admin", settingRouter);
+app.use("/api/v1/settings", settingRouter);
 
 export { app };

@@ -34,7 +34,7 @@ export default function Settings() {
   const handlePerosonalInfo = async () => {
     setIsClickedAccInfo(true);
     setShowDropdown(false);
-    const result = await axios.get(`${import.meta.env.VITE_BACKEND_API}/profile`, {
+    const result = await axios.get(`${import.meta.env.VITE_BACKEND_API}/api/v1/profile`, {
       withCredentials: true,
     });
     setAccountInfo(result.data.data);
@@ -62,7 +62,7 @@ export default function Settings() {
   const handleSaveAccInfo = async () => {
     try {
       const result = await axios.post(
-        `${import.meta.env.VITE_BACKEND_API}/account-update`,
+        `${import.meta.env.VITE_BACKEND_API}/api/v1/account-update`,
         editingAccInfo,
         {
           withCredentials: true,
@@ -95,7 +95,7 @@ export default function Settings() {
     //   console.log(`${key}:`, value);
     // }
 
-    await axios.post(`${import.meta.env.VITE_BACKEND_API}/avatar`, formData, {
+    await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/avatar`, formData, {
       withCredentials: true,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -125,7 +125,7 @@ export default function Settings() {
 
   const handleSaveEditingPassword = async (data) => {
     try {
-      await axios.post(`${import.meta.env.VITE_BACKEND_API}/password-change`, data, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/password-change`, data, {
         withCredentials: true,
       });
       resetField("oldPassword");

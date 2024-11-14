@@ -10,7 +10,7 @@ export default function List() {
   useEffect(() => {
     const list = async (req, res) => {
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/api/allPostList`,
+        `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/allPostList`,
         {
           withCredentials: true,
         }
@@ -27,7 +27,7 @@ export default function List() {
   const handleDelete = async (id) => {
     try {
       const result = await axios.delete(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/api/delete/${id}`,
+        `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/delete/${id}`,
         {
           withCredentials: true,
         }
