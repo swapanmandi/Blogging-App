@@ -41,7 +41,7 @@ export default function Post() {
     showAdminOnPost = true,
     showDateOnPost = true,
     showTimeOnPost = false,
-    permalinkType = "title",
+    permalinkType = "id",
   } = useSettings()?.settings || {};
 
  
