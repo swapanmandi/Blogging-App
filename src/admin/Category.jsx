@@ -7,7 +7,7 @@ export default function Category() {
 
   useEffect(() => {
     const getCategories = async () => {
-      const result = await axios.get(`${import.meta.env.VITE_BACKEND_API}/app/get/category`, {
+      const result = await axios.get(`${import.meta.env.VITE_BACKEND_API}/api/v1/blog/get/category`, {
         withCredentials: true,
       });
 
@@ -18,7 +18,7 @@ export default function Category() {
 
   const handleAddCategory = async () => {
     const result = await axios.post(
-      `${import.meta.env.VITE_BACKEND_API}/app/create/category`,
+      `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/create/category`,
       { category },
       {
         withCredentials: true,

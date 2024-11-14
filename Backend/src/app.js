@@ -1,48 +1,54 @@
-import express from 'express'
-import cors from 'cors'
-import cookieParser from 'cookie-parser'
-import userRoter from './routes/user.route.js'
-import blogRouter from './routes/blog.route.js'
-import likeRouter from './routes/like.route.js'
-import commentRouter from './routes/comment.route.js'
-import readLaterRouter from "./routes/readLater.route.js"
-import categoryRouter from "./routes/category.routes.js"
-import messageRouter from './routes/message.routes.js'
-import settingRouter from './routes/setting.routes.js'
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import userRoter from "./routes/user.route.js";
+import blogRouter from "./routes/blog.route.js";
+import likeRouter from "./routes/like.route.js";
+import commentRouter from "./routes/comment.route.js";
+import readLaterRouter from "./routes/readLater.route.js";
+import categoryRouter from "./routes/category.routes.js";
+import messageRouter from "./routes/message.routes.js";
+import settingRouter from "./routes/setting.routes.js";
 
+const app = express();
 
-const app = express()
-
-app.use(cors({
+app.use(
+  cors({
     origin: process.env.CORS_ORIGIN,
-    credentials: true
-}))
+    credentials: true,
+  })
+);
 
-app.use(cookieParser())
+app.use(cookieParser());
 
-app.use(express.urlencoded({
+app.use(
+  express.urlencoded({
     extended: true,
-    limit: '16kb'
-}))
+    limit: "16kb",
+  })
+);
 
-app.use(express.json({limit: '16kb'}))
-app.use(express.static("public"))
+app.use(express.json({ limit: "16kb" }));
+app.use(express.static("public"));
 
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(err.statusCode || 500).json({
-      success: false,
-      message: err.message || 'Internal Server Error',
-      errors: err.errors || [],
-    });
+  console.error(err.stack);
+  res.status(err.statusCode || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+    errors: err.errors || [],
   });
+});
 
+app.use("/api/v1/user", userRoter);
+app.use(
+  "/api/v1/blog",
+  blogRouter,
+  likeRouter,
+  categoryRouter,
+  messageRouter,
+  readLaterRouter
+);
+app.use("/api/v1/admin", settingRouter);
 
-app.use("/", userRoter)
-app.use("/blog", blogRouter)
-app.use("/app", likeRouter, categoryRouter, messageRouter )
-app.use("/api", commentRouter)
-app.use("/app/blog",readLaterRouter)
-app.use("/app/admin", settingRouter)
-
-export {app}
+export { app };

@@ -111,7 +111,7 @@ export default function Settings() {
     formData.append("showCategoryOnPost", data.showTagOnPost);
 
     const result = await axios.post(
-      `${import.meta.env.VITE_BACKEND_API}/app/admin/setting`,
+      `${import.meta.env.VITE_BACKEND_API}/api/v1/admin/setting`,
       formData,
       {
         withCredentials: true,
