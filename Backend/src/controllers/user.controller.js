@@ -4,7 +4,7 @@ import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import { AxiosError } from "axios";
+
 
 // generate access and refresh Tokens
 
@@ -268,7 +268,7 @@ const protectedRoute = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (!user) {
-      throw new AxiosError(400, "You are not Authenticated.");
+      throw new ApiError(400, "You are not Authenticated.");
     }
 
     res
