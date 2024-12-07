@@ -168,8 +168,8 @@ const Navbar = () => {
             } h-fit flex justify-between pl-2 pr-2 items-center dark:bg-slate-900 overflow-hidden text-black `}
           >
             {menu.map((item) => (
-              <Link to={item.url} className=" p-1 font-semibold">
-                {item.name}
+              <Link to={token && user?._id && item.name === "Login" ? "/settings" : item.url} className=" p-1 font-semibold">
+                {token && user?._id && item.name === "Login" ? "Account" : item.name}
               </Link>
             ))}
           </div>
