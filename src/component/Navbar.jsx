@@ -52,10 +52,16 @@ const Navbar = () => {
           >
             {menu.map((item) => (
               <Link
-                to={item.url}
+                to={
+                  token && user?._id && item.name === "Login"
+                    ? "/settings"
+                    : item.url
+                }
                 className=" bg-emerald-800 rounded-md p-1 m-1 my-4 lg:my-2 text-center lg:rounded-none lg:bg-inherit lg:text-black font-semibold"
               >
-                {item.name}
+                {token && user?._id && item.name === "Login"
+                  ? "Account"
+                  : item.name}
               </Link>
             ))}
           </div>
