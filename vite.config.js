@@ -9,7 +9,7 @@ export default defineConfig({
   },
   server:{
     proxy:{
-      '/api' : "https://blogpress-chiu.onrender.com",
+      '/api' : "http://localhost:3000",
     },
   },
   plugins: [react()],

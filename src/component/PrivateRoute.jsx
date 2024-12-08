@@ -36,7 +36,7 @@ export default function PrivateRoute() {
   }, []);
 
   if (loading) {
-    return <div>Loading... Auth</div>;
+    return <div>Loading... Auth</div>
   }
 
   return token && user?._id ? <Outlet /> : <Navigate to="/signin" />;

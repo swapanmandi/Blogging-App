@@ -15,7 +15,7 @@ export default function AdminPrivateRoute() {
 
 
         if (_token && _admin?._id && _admin?.role === "admin") {
-          console.log(_token)
+          //console.log(_token)
           setToken(_token);
           setAdmin(_admin);
 
@@ -33,8 +33,8 @@ export default function AdminPrivateRoute() {
   }, []);
 
   if (loading) {
-    return <div>Loading... Auth</div>;
+    return <div>Loading... Auth</div>
   }
 
-  return token && admin?._id ? <Outlet /> : <Navigate to="admin/signin" />;
+  return token && admin?._id ? <Outlet /> : <Navigate to="admin/signin" />
 }
