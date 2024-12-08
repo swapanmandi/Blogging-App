@@ -2,21 +2,15 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
-
+import { deletePost, getDraftPost } from "../api";
 
 export default function DraftList() {
   const [draftList, setDraftList] = useState(null);
   const [isDeleted, setIsDeleted] = useState(false);
 
   useEffect(() => {
-    const draftPost = async (req, res) => {
-      const result = await axios.get(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/draftPost`,
-        {
-          withCredentials: true,
-        }
-      );
-
+    const draftPost = async () => {
+      const result = await getDraftPost();
       setDraftList(result.data.data);
       //toast(result.data.message);
     };
@@ -24,19 +18,14 @@ export default function DraftList() {
   }, [isDeleted]);
 
   const handleDelete = async (id) => {
-  try {
-      const result = await axios.delete(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/delete/${id}`,
-        {
-          withCredentials: true,
-        }
-      );
+    try {
+      const result = await deletePost(id);
       setIsDeleted(true);
       toast(result.data.message);
-  } catch (error) {
-    console.log("error to delete post")
-    toast(error)
-  }
+    } catch (error) {
+      console.log("error to delete post");
+      toast(error);
+    }
   };
 
   return (
