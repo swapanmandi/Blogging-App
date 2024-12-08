@@ -5,13 +5,13 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 const createCategory = asyncHandler(async (req, res) => {
   const { category } = req.body;
-  console.log("category:", category);
+  //console.log("category:", category);
 
   if (!category) {
     throw new ApiError(400, "The field is empty");
   }
 
-  const existedCategory = await Category.findOne({
+  let existedCategory = await Category.findOne({
     user: req.user?._id,
   });
 
@@ -20,13 +20,18 @@ const createCategory = asyncHandler(async (req, res) => {
       throw new ApiError(400, "The category already exists");
     } else {
       existedCategory.category.push(category);
-      await existedCategory.save()
+      await existedCategory.save();
     }
   } else {
-    await Category.create({ user: req.user?._id, category: [category] });
+    existedCategory = await Category.create({
+      user: req.user?._id,
+      category: [category],
+    });
   }
 
-  res.status(200).json(new ApiResponse(200, {}, "Category saved successfully"));
+  res
+    .status(200)
+    .json(new ApiResponse(200, existedCategory, "Category saved successfully"));
 });
 
 const getCategory = asyncHandler(async (req, res) => {
@@ -36,5 +41,8 @@ const getCategory = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, category, "category fetched successfully"));
 });
+
+// remove category
+
 
 export { createCategory, getCategory };
