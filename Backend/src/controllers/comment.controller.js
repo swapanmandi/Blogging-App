@@ -50,4 +50,26 @@ const getComments = asyncHandler(async (req, res) => {
     );
 });
 
-export { addComment, getComments };
+
+const getCommentDashboardData = asyncHandler(async (req, res) => {
+  try {
+    const commentsCount = await Comment.countDocuments();
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          commentsCount,
+          "comment dashboard count fetched successfully."
+        )
+      );
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "error to fetch comments count or internal error",
+      error
+    );
+  }
+});
+
+export { addComment, getComments, getCommentDashboardData };
