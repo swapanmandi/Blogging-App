@@ -10,7 +10,8 @@ import {
   protectedRoute,
   updateAccount,
   changePassword,
-  fetchAdminProfile
+  fetchAdminProfile,
+  getUserDashboardData
 } from "../controllers/user.controller.js";
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -37,7 +38,7 @@ router
   );
 
   router.route("/password-change").post(verifyJWT, changePassword)
-
+  router.route("/users-count").get(verifyJWT, getUserDashboardData);
 
   
 
