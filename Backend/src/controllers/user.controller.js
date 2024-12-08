@@ -5,7 +5,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
-
 // generate access and refresh Tokens
 
 const generateAccessTokenAndrefreshTokens = async (userId) => {
@@ -119,7 +118,8 @@ const signinUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-      sameSite: "None"
+    //secure: false,
+    sameSite: "None",
   };
   res
     .cookie("accessToken", accessToken, options)
@@ -167,8 +167,9 @@ const adminSignin = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-   secure: process.env.NODE_ENV === "production",
-     sameSite: "None"
+    //secure: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "None",
   };
 
   res
@@ -247,10 +248,10 @@ const setAvatarImage = asyncHandler(async (req, res) => {
 const getProfile = asyncHandler(async (req, res) => {
   //const user = await User.findById(req.user._id).select("-refreshToken -password");
 
-  if(req.user.role === "user")
-  return res
-    .status(200)
-    .json(new ApiResponse(200, req.user, "User fetched Successfully."));
+  if (req.user.role === "user")
+    return res
+      .status(200)
+      .json(new ApiResponse(200, req.user, "User fetched Successfully."));
 });
 
 // fetch admin profile
@@ -391,6 +392,27 @@ const changePassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Password is successfully changed."));
 });
 
+const getUserDashboardData = asyncHandler(async (req, res) => {
+  try {
+    const usersCount = await User.countDocuments({ role: "user" });
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          usersCount,
+          "user dashboard count fetched successfully."
+        )
+      );
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "Error to fetch user dashboard count or internal error",
+      error
+    );
+  }
+});
+
 export {
   signupUser,
   signupAdmin,
@@ -403,5 +425,6 @@ export {
   updateAccount,
   protectedRoute,
   changePassword,
-  fetchAdminProfile
+  fetchAdminProfile,
+  getUserDashboardData
 };
