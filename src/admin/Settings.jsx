@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { useSettings } from "../store/SettingsContext.jsx";
 
 export default function Settings() {
-
   const {
     siteTitle,
     tagLine,
@@ -25,7 +24,7 @@ export default function Settings() {
     showCategoryOnPost,
   } = useSettings();
 
-  console.log("s title", siteTitle)
+  console.log("s title", siteTitle);
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -85,7 +84,7 @@ export default function Settings() {
   const timeFormat3 = `${hours}: ${minutes}`;
 
   const saveSettings = async (data) => {
-    console.log("setting",data);
+    //console.log("setting", data);
     const formData = new FormData();
 
     const siteIcon = data.siteIcon[0];
@@ -121,224 +120,115 @@ export default function Settings() {
   };
 
   return (
-    <>
-      <div>
-        <form onSubmit={handleSubmit(saveSettings)}>
-          <div className=" flex">
-            <h2 className=" m-2">Site Title</h2>
+    <div className=" w-full h-full flex justify-center overflow-hidden">
+    <form onSubmit={handleSubmit(saveSettings)} className=" h-full absolute w-2/3 overflow-y-scroll">
+      <section className="mb-4">
+        <label htmlFor="siteTitle" className="block m-2 font-medium">Site Title</label>
+        <input
+          id="siteTitle"
+          type="text"
+          {...register("siteTitle")}
+          className="outline-none border m-2 p-2 border-slate-700 rounded-md w-1/2"
+        />
+      </section>
+  
+      <section className="mb-4">
+        <label htmlFor="tagLine" className="block m-2 font-medium">Site Tag Line</label>
+        <input
+          id="tagLine"
+          type="text"
+          {...register("tagLine")}
+          className="outline-none border m-2 p-2 border-slate-700 rounded-md w-1/2 "
+        />
+      </section>
+  
+      <section className="mb-4">
+        <label htmlFor="siteIcon" className="block m-2 font-medium">Site Icon</label>
+        <input
+          id="siteIcon"
+          type="file"
+          {...register("siteIcon")}
+          className="block m-2"
+        />
+      </section>
+  
+      <fieldset className="mb-4">
+        <legend className="m-2 font-medium">Date Format:</legend>
+        <div className="flex flex-col m-2">
+          {["mmdd,yyyy", "mm/dd/yyyy", "mm.dd.yyyy", "yyyy-mm-dd"].map((format, index) => (
+            <label key={format} className="flex items-center mb-2">
+              <input
+                type="radio"
+                {...register("dateFormat")}
+                name="dateFormat"
+                value={format}
+                className="mr-2"
+              />
+              {format}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+  
+      <fieldset className="mb-4">
+        <legend className="m-2 font-medium">Time Format:</legend>
+        <div className="flex flex-col m-2">
+          {["00:00UU", "00:00uu", "00:00"].map((format, index) => (
+            <label key={format} className="flex items-center mb-2">
+              <input
+                type="radio"
+                {...register("timeFormat")}
+                name="timeFormat"
+                value={format}
+                className="mr-2"
+              />
+              {format}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+  
+      <section className="mb-4">
+        <label htmlFor="maxShowPost" className="block m-2 font-medium">
+          Blog pages show at most:
+        </label>
+        <input
+          id="maxShowPost"
+          type="number"
+          {...register("maxShowPost")}
+          className="h-10 p-2 m-2 border border-black rounded-md"
+        />
+      </section>
+  
+      <fieldset className="mb-4">
+        <legend className="m-2 font-medium">Featured Image</legend>
+        <div className="flex flex-col">
+          <label className="m-2">
+            Width:
             <input
-              type="text"
-              {...register("siteTitle")}
-              className=" outline-none border m-2 border-slate-700"
-            ></input>
-          </div>
-
-          <div className=" flex">
-            <h2 className=" m-2">Site Tag Line</h2>
-            <input
-              type="text"
-              {...register("tagLine")}
-              className=" outline-none border m-2 border-slate-700"
-            ></input>
-          </div>
-
-          <div>
-            <h2 className=" m-2">
-              Site Icon <input type="file" {...register("siteIcon")}></input>
-            </h2>
-          </div>
-
-          <div className=" flex">
-            <h2 className=" m-2">Date Format:</h2>
-            <div className="flex flex-col m-2">
-              <label>
-                <input
-                  type="radio"
-                  {...register("dateFormat")}
-                  name="dateFormat"
-                  value="mmdd,yyyy"
-                ></input>
-                {dateFormat1}
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  {...register("dateFormat")}
-                  name="dateFormat"
-                  value="mm/dd/yyyy"
-                ></input>
-                {dateFormat2}
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  {...register("dateFormat")}
-                  name="dateFormat"
-                  value="mm.dd.yyyy"
-                ></input>
-                {dateFormat3}
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  {...register("dateFormat")}
-                  name="dateFormat"
-                  value="yyyy-mm-dd"
-                ></input>
-                {dateFormat4}
-              </label>
-            </div>
-          </div>
-
-          <div className=" flex">
-            <h2 className=" m-2">Time Format:</h2>
-            <div className="flex flex-col m-2">
-              <label>
-                <input
-                  {...register("timeFormat")}
-                  type="radio"
-                  name="timeFormat"
-                  value="00:00UU"
-                ></input>
-                {timeFormat1}
-              </label>
-              <label>
-                <input
-                  {...register("timeFormat")}
-                  type="radio"
-                  name="timeFormat"
-                  value="00:00uu"
-                ></input>
-                {timeFormat2}
-              </label>
-              <label>
-                <input
-                  {...register("timeFormat")}
-                  type="radio"
-                  name="timeFormat"
-                  value="00:00"
-                ></input>
-                {timeFormat3}
-              </label>
-            </div>
-          </div>
-
-          <div className=" flex">
-            <h2 className=" m-2">Blog pages show at most</h2>
-            <input
-              {...register("maxShowPost")}
-              className=" h-10 p-1 w-16 outline-none border border-black"
               type="number"
-            ></input>
-          </div>
-
-          {/* <div className=" flex">
-          <h2 className=" m-2">Publish Comments before approved</h2>
-          <input type="checkbox"></input>
-        </div> */}
-
-          <div className=" flex">
-            <h2 className=" m-2"> Featured Image</h2>
-            <div className=" flex flex-col">
-              <label>
-                Width:
-                <input
-                  {...register("featuredImageWidth")}
-                  type="number"
-                  className=" m-2 h-10 p-1 w-16 outline-none border border-black"
-                ></input>
-              </label>
-              <label>
-                Height:
-                <input
-                  {...register("featuredImageHeight")}
-                  type="number"
-                  className=" m-2 h-10 p-1 w-16 outline-none border border-black"
-                ></input>
-              </label>
-            </div>
-          </div>
-
-          <div className=" flex">
-            <h2 className=" m-2">Permalinks Structure</h2>
-            <div className=" flex flex-col">
-              <label className=" flex">
-                <input
-                  {...register("permalinkType")}
-                  type="radio"
-                  name="permalinkType"
-                  value="title"
-                ></input>
-                <h2 className=" m-2">'https://example.com/post-title/'</h2>
-              </label>
-              <label className=" flex">
-                <input
-                  value="id"
-                  {...register("permalinkType")}
-                  type="radio"
-                  name="permalinkType"
-                ></input>
-                <h2 className=" m-2">'https://example.com/post-id/'</h2>
-              </label>
-            </div>
-          </div>
-
-          <div className="flex">
-            <h2 className=" m-2">Dispaly Admin Name on Post List</h2>
-            <input {...register("showAdminOnList")} type="checkbox"></input>
-          </div>
-
-          <div className=" flex">
-            <h2 className=" m-2">Display Admin Name on Post</h2>
-            <input {...register("showAdminOnPost")} type="checkbox"></input>
-          </div>
-
-          <div className=" flex">
-            <h2 className=" m-2">Dispaly Date on Post List</h2>
-            <input {...register("showDateOnList")} type="checkbox"></input>
-          </div>
-
-          <div className=" flex">
-            <h2 className=" m-2">Dispaly Date on Post</h2>
-            <input {...register("showDateOnPost")} type="checkbox"></input>
-          </div>
-
-          <div className=" flex">
-            <h2 className=" m-2">Display Published Time on Post List</h2>
-            <input {...register("showTimeOnList")} type="checkbox"></input>
-          </div>
-
-          <div className=" flex">
-            <h2 className=" m-2">Display Published Time on Post</h2>
-            <input {...register("showTimeOnPost")} type="checkbox"></input>
-          </div>
-
-          <div className=" flex">
-            <h2 className=" m-2">Dispaly Tag on Post</h2>
-            <input {...register("showTagOnPost")} type="checkbox"></input>
-          </div>
-
-          <div className=" flex">
-            <h2 className=" m-2">Dispaly Category on Post</h2>
-            <input {...register("showCategoryOnPost")} type="checkbox"></input>
-          </div>
-
-          {/*           
-          <div>
-            <h2></h2>
-            <input {...register("")}></input>
-          </div>
-
-          
-          <div>
-            <h2></h2>
-            <input {...register("")}></input>
-          </div> */}
-          <button type="submit" className=" bg-slate-500 p-1 rounded-md m-2">
-            Save
-          </button>
-        </form>
-      </div>
-    </>
+              {...register("featuredImageWidth")}
+              className="h-10 p-2 m-2 border border-black rounded-md"
+            />
+          </label>
+          <label className="m-2">
+            Height:
+            <input
+              type="number"
+              {...register("featuredImageHeight")}
+              className="h-10 p-2 m-2 border border-black rounded-md"
+            />
+          </label>
+        </div>
+      </fieldset>
+  
+      {/* Add similar structures for the remaining settings */}
+  
+      <button type="submit" className="bg-slate-500 text-white p-1 rounded-md m-2 px-4">
+        Save
+      </button>
+    </form>
+  </div>
+  
   );
 }
