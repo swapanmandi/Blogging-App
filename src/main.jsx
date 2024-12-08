@@ -24,8 +24,8 @@ import PrivateRoute from "./component/PrivateRoute.jsx";
 import Category from "./admin/Category.jsx";
 import AdminSettings from "./admin/Settings.jsx";
 import AdminPrivateRoute from "./admin/AdminPrivateRoute.jsx";
-
-const List = lazy(() => import("./admin/List.jsx"));
+import Routes from "./admin/Routes.jsx";
+import List from "./admin/List.jsx"
 
 const router = createBrowserRouter([
   {
@@ -87,13 +87,11 @@ const router = createBrowserRouter([
           },
         ],
       },
-    ],
-  },
-
-  {
-    path: "/admin",
-    element: <AdminHome />,
-    children: [
+     
+      {
+        path: "/admin",
+        element: <AdminHome />,
+      },
       {
         path: "/admin/signup",
         element: <AdminSignup />,
@@ -104,6 +102,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+
   {
     path: "",
     element: <AdminPrivateRoute />,
@@ -111,35 +110,41 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/admin/dashboard",
-        element: <Dashboard />,
-      },
-      {
-        path: "/admin/profile",
-        element: <Profile />,
-      },
-      {
-        path: "/admin/dashboard/create-post",
-        element: <CreatePost />,
-      },
-      {
-        path: "/admin/dashboard/list",
-        element: <List />,
-      },
-      {
-        path: "/admin/dashboard/draftList",
-        element: <DraftList />,
-      },
-      {
-        path: "/admin/dashboard/blog/post/edit/:id",
-        element: <CreatePost />,
-      },
-      {
-        path: "/admin/dashboard/blog/category",
-        element: <Category />,
-      },
-      {
-        path: "/admin/dashboard/settings",
-        element: <AdminSettings />,
+        element: <Routes />,
+        children: [
+          {
+            path: "/admin/dashboard",
+            element: <Dashboard />,
+          },
+          {
+            path: "/admin/dashboard/profile",
+            element: <Profile />,
+          },
+          {
+            path: "/admin/dashboard/create-post",
+            element: <CreatePost />,
+          },
+          {
+            path: "/admin/dashboard/list",
+            element: <List />,
+          },
+          {
+            path: "/admin/dashboard/draftList",
+            element: <DraftList />,
+          },
+          {
+            path: "/admin/dashboard/blog/post/edit/:id",
+            element: <CreatePost />,
+          },
+          {
+            path: "/admin/dashboard/blog/category",
+            element: <Category />,
+          },
+          {
+            path: "/admin/dashboard/settings",
+            element: <AdminSettings />,
+          },
+        ],
       },
     ],
   },
