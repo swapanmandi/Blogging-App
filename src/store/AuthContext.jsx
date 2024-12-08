@@ -4,6 +4,13 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  signinUser,
+  signoutUser,
+  signupUser,
+  signupAdmin,
+  signinAdmin,
+} from "../api/index.js";
 
 const AuthContext = createContext({
   user: null,
@@ -12,34 +19,46 @@ const AuthContext = createContext({
 
   signup: async () => {},
   signin: async () => {},
+  adminSignup: async () => {},
+  adminSignin: async () => {},
   signout: async () => {},
 });
 
 const useAuth = () => useContext(AuthContext);
-const check = "its working!";
 
 function AuthProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
   const [admin, setAdmin] = useState(null);
-  // const [adminToken, setAdminToken] = useState(null);
 
   const navigate = useNavigate();
+  const check = "auth isworks";
+
+  // user signup
+
+  const signup = async (data) => {
+    try {
+      setLoading(true);
+      await signupUser(data);
+      navigate("/signin");
+    } catch (error) {
+      console.error("Error to sign up.", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // for logging to account
   const signin = async (data) => {
     try {
       setLoading(true);
-      const result = await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/signin`, data, {
-        origin: import.meta.env.VITE_BACKEND_API,
-        withCredentials: true,
-      });
+      const result = await signinUser(data);
       setUser(result.data.data.user);
       setToken(result.data.data.accessToken);
       localStorage.setItem("token", result.data.data.accessToken);
       localStorage.setItem("user", JSON.stringify(result.data.data.user));
-      localStorage.setItem("admin", null)
+      localStorage.setItem("admin", null);
       navigate("/");
     } catch (error) {
       console.error("An error occured during sign in", error);
@@ -50,13 +69,9 @@ function AuthProvider({ children }) {
 
   // admin signup
 
-  const signupAdmin = async (data) => {
+  const adminSignup = async (data) => {
     try {
-      await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/admin/signup`, {
-        fullName: data.fullName,
-        email: data.email,
-        password: data.password,
-      });
+      await signupAdmin(data);
     } catch (error) {
       console.error("eror to register", error);
     }
@@ -64,20 +79,14 @@ function AuthProvider({ children }) {
 
   // ADMIN LOGIN
 
-  const signinAdmin = async (data) => {
+  const adminSignin = async (data) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/user/admin/signin`,
-        { email: data.email, password: data.password },
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await signinAdmin(data);
       setAdmin(response.data.data.user);
       setToken(response.data.data.accessToken);
       localStorage.setItem("token", response.data.data.accessToken);
       localStorage.setItem("admin", JSON.stringify(response.data.data.user));
-      localStorage.setItem("user", null)
+      localStorage.setItem("user", null);
       toast(response.data.data.message);
       navigate("/admin");
     } catch (error) {
@@ -91,13 +100,7 @@ function AuthProvider({ children }) {
   const signout = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/user/signout`,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await signoutUser();
       //console.log(response.data.data.role)
       if (response.data.data.role === "admin") {
         navigate("/admin/login");
@@ -121,23 +124,6 @@ function AuthProvider({ children }) {
     }
   };
 
-  // for signup user
-
-  const signup = async (data) => {
-    //console.log("signup data", data)
-    try {
-      setLoading(true);
-      await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/signup`, data, {
-        withCredentials: false,
-      });
-      navigate("/signin");
-    } catch (error) {
-      console.error("Error to sign up.", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // check authentication
   useEffect(() => {
     setLoading(true);
@@ -149,14 +135,13 @@ function AuthProvider({ children }) {
       //console.log(_user)
       setToken(_token);
       setUser(_user);
-     
+
       //console.log("Loaded token and user from storage on mount");
     }
 
     if (_admin && _token) {
       setAdmin(_admin);
       setToken(_token);
-    
     }
     setLoading(false);
   }, []);
@@ -172,9 +157,8 @@ function AuthProvider({ children }) {
         token,
         signup,
         admin,
-        // adminToken,
-        signinAdmin,
-        signupAdmin,
+        adminSignup,
+        adminSignin,
         check,
       }}
     >

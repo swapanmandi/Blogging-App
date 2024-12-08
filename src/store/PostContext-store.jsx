@@ -1,5 +1,5 @@
-import axios from "axios";
 import { createContext, useState, useEffect, useContext } from "react";
+import { blogs } from "../api/index.js";
 
 const PostContext = createContext();
 
@@ -15,8 +15,9 @@ const PostContextProvider = ({ children }) => {
       try {
         await new Promise((resolve) => setTimeout(resolve, 250));
         //const response = await axios.get("../src/../backend/posts.json");
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_API}/api/v1/blog/list`);
-        console.log(response.data.message);
+        //const response = await axios.get(`${import.meta.env.VITE_BACKEND_API}/api/v1/blog/list`);
+        const response = await blogs();
+        //console.log("blog list", response.data.data);
         setPosts(response.data.data);
       } catch {
         (error) => {
@@ -42,7 +43,6 @@ const PostContextProvider = ({ children }) => {
     }
   }, [posts, searchQuery]);
 
-
   const formatdDate = (e) => {
     const date = new Date(e);
     const dd = date.getDate();
@@ -51,13 +51,13 @@ const PostContextProvider = ({ children }) => {
     return `${dd}-${mm}-${yyyy}`;
   };
 
-  const formatTime = (e) =>{
-    const time = new Date()
-    const minutes = time.getMinutes()
-    const hours = time.getHours()
-    
-    return `${hours}:${minutes} `
-  }
+  const formatTime = (e) => {
+    const time = new Date();
+    const minutes = time.getMinutes();
+    const hours = time.getHours();
+
+    return `${hours}:${minutes} `;
+  };
 
   return (
     <PostContext.Provider
@@ -69,7 +69,7 @@ const PostContextProvider = ({ children }) => {
         searchQuery,
         setSearchQuery,
         displayPost,
-        formatdDate
+        formatdDate,
       }}
     >
       {children}
