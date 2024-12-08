@@ -63,10 +63,16 @@ export default function SignUp() {
             />
           </form>
 
-          <h2 className="m-10">
+          <h2 className="m-5">
             You have already a account. Please{" "}
             <Link to={"/signin"}>
               <strong>Sign In</strong>
+            </Link>
+          </h2>
+          <h2 className="">
+            If you want to publish your blog? 
+            <Link to={"/admin/signup"}>
+              <strong> SignUp </strong>here.
             </Link>
           </h2>
         </div>

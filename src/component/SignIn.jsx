@@ -45,10 +45,16 @@ export default function SignIn() {
               type="submit"
             />
           </form>
-          <h2 className=" m-8">
-            Back to
+          <h2 className=" m-4">
+            Don't have Account? 
             <Link to={"/signup"}>
-              <strong>SignUp</strong>
+              <strong> SignUp </strong>here.
+            </Link>
+          </h2>
+          <h2 className="">
+            If you want to publish your blog? 
+            <Link to={"/admin/signup"}>
+              <strong> SignUp </strong>here.
             </Link>
           </h2>
         </div>
