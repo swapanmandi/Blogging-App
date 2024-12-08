@@ -318,6 +318,31 @@ const views = asyncHandler(async (req, res) => {
     );
 });
 
+const getBlogDashboardData = asyncHandler(async (req, res) => {
+  try {
+    const blogsCount = await Blog.countDocuments();
+    const publishedBlogsCount = await Blog.countDocuments({ status: "active" });
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { blogsCount, publishedBlogsCount },
+          "blogs dashboard count fetched successfully."
+        )
+      );
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "Error to get blogs dashboard data or internal error",
+      error
+    );
+  }
+});
+
+
+
 export {
   createBlog,
   //getBlog,
@@ -330,4 +355,5 @@ export {
   popularPosts,
   trendingPosts,
   views,
+  getBlogDashboardData
 };
