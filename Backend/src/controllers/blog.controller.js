@@ -70,7 +70,9 @@ const allPostList = asyncHandler(async (req, res) => {
   if (posts) {
     posts = JSON.parse(posts);
   } else {
-     posts = await Blog.find({ user: req.user._id, status: "active" }).select(" -status -slug ");
+    posts = await Blog.find({ user: req.user._id, status: "active" }).select(
+      " -status -slug "
+    );
 
     if (!posts) {
       throw new ApiError(400, "Error to find and edit blog");
@@ -177,40 +179,45 @@ const deletePost = asyncHandler(async (req, res) => {
 //pub fetch all blog
 
 const getBlogList = asyncHandler(async (req, res) => {
-  const cachedPosts = await redis.get("pub_posts");
+  try {
+    try {
+      const cachedPosts = await redis.get("pub_posts");
+      if (cachedPosts) {
+        return res
+          .status(200)
+          .json(
+            new ApiResponse(
+              200,
+              JSON.parse(cachedPosts),
+              "Cached post list fetched successfully."
+            )
+          );
+      }
+    } catch (error) {
+      throw new ApiError(400, "Redis error:", error);
+    }
 
-  if (cachedPosts) {
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          JSON.parse(cachedPosts),
-          "Cached post list fetched successfully."
-        )
-      );
-  } else {
     const posts = await Blog.find({
       status: "active",
     }).select(" -status");
 
     //console.log(posts)
 
-    if (!posts) {
+    if (!posts || posts.length === 0) {
       throw new ApiError(500, "There is no Blogs or Error to fetch blogs.");
     }
 
-    await redis.set("pub_posts", JSON.stringify(posts), "EX", 3600);
+    try {
+      await redis.set("pub_posts", JSON.stringify(posts), "EX", 3600);
+    } catch (error) {
+      throw new ApiError(400, "Failed to cache blogs in Redis:", error);
+    }
 
     return res
       .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          JSON.parse(posts),
-          "Post list fetched successfully."
-        )
-      );
+      .json(new ApiResponse(200, posts, "Post list fetched successfully."));
+  } catch (error) {
+    throw new ApiError(500, "An error occurred while fetching blog posts.");
   }
 });
 
