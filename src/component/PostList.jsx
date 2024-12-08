@@ -6,6 +6,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import RelatedPosts from "./RelatedPosts.jsx";
 import axios from "axios";
 import { useSettings } from "../store/SettingsContext.jsx";
+import { getPopularPosts } from "../api/index.js";
 
 export default function PostList() {
   const { loading, displayPost, formatdDate } = usePostContext();
@@ -21,13 +22,16 @@ export default function PostList() {
   });
 
   const [popularPosts, setPopularPosts] = useState(null);
-  const [isGrid, setIsGrid] = useState(true);
+  const [isGrid, setIsGrid] = useState(false);
   const [itemPerPage, setItemPerPage] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
   const [peginateList, setPeginateList] = useState([]);
 
-  const { showAdminOnList = true, showDateOnList = true, permalinkType = "id" } =
-    useSettings()?.settings || {};
+  const {
+    showAdminOnList = true,
+    showDateOnList = true,
+    permalinkType = "id",
+  } = useSettings()?.settings || {};
 
   useEffect(() => {
     setFilteredPosts(displayPost);
@@ -111,10 +115,8 @@ export default function PostList() {
 
   useEffect(() => {
     const handlePopularPosts = async () => {
-      const result = await axios.get(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/popular-posts`
-      );
-      setPopularPosts(result.data.data);
+      const result = await getPopularPosts();
+      setPopularPosts(result.data?.data);
     };
 
     handlePopularPosts();
@@ -126,25 +128,42 @@ export default function PostList() {
         <div className=" flex justify-between mx-2">
           <h2
             onClick={handleFilterOpen}
-            className=" px-2 bg-yellow-500 w-fit p-1 text-black rounded-sm font-semibold"
+            className=" px-2 bg-yellow-500 w-fit p-1 text-black rounded-sm font-semibold m-1"
           >
             Filter
           </h2>
-          <button
-            onClick={handleLayout}
-            className=" px-2 bg-yellow-500 w-fit p-1 text-black rounded-sm font-semibold"
-          >
-            {isGrid ? "Flex" : "Grid"}
-          </button>
+          <div className=" hidden lg:flex">
+            <button
+              onClick={handleLayout}
+              className=" px-2 bg-yellow-500 w-fit p-1 text-black rounded-sm font-semibold"
+            >
+              {isGrid ? "Flex" : "Grid"}
+            </button>
+          </div>
         </div>
 
         {isOpenedFilter && (
-          <div className=" absolute lg:w-7/12  bg-cyan-600 text-black rounded-md p-1">
+          <div className=" w-10/12 absolute lg:w-7/12  bg-cyan-600 text-black rounded-md p-1">
             <span
               onClick={handleFilterClose}
-              className="absolute -top-6 -right-4 h-6 w-6 text-center rounded-full bg-red-600"
+              className="absolute -top-6 -right-4 h-6 w-6 text-center rounded-full bg-slate-200"
             >
-              X
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="icon icon-tabler icons-tabler-outline icon-tabler-x"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M18 6l-12 12" />
+                <path d="M6 6l12 12" />
+              </svg>
             </span>
 
             <div className=" space-x-2 p-3 rounded-md h-fit lg:w-fit">
@@ -253,8 +272,8 @@ export default function PostList() {
                 key={item._id}
                 className={
                   isGrid
-                    ? " bg-white w-[280px] m-2 h-[400px] overflow-hidden flex flex-col items-center p-2 mb-8 "
-                    : "flex flex-col lg:w-full lg:flex lg:flex-row p-4 text-md m-4 rounded-xl bg-white xs:text-red-500 dark:bg-slate-950 dark:text-white lg:text-green"
+                    ? " bg-slate-200 w-[280px] m-2 h-[400px] overflow-hidden flex flex-col items-center p-2 mb-8 rounded-md"
+                    : "flex flex-col w-full lg:flex lg:flex-row p-4 text-md lg:m-4 rounded-xl bg-slate-200 xs:text-red-500 dark:bg-slate-950 dark:text-white lg:text-green"
                 }
               >
                 <img
@@ -287,7 +306,11 @@ export default function PostList() {
                       </span>
                     )}
                   </div>
-                  <Link to={`/blogs/${permalinkType === "title" ? item.slug : item._id}`}>
+                  <Link
+                    to={`/blogs/${
+                      permalinkType === "title" ? item.slug : item._id
+                    }`}
+                  >
                     <p className=" line-clamp-4">{item.description}</p>
                     <h3 className=" font-semibold">Read More</h3>
                   </Link>
@@ -304,16 +327,31 @@ export default function PostList() {
             <button
               disabled={currentPage === 1}
               onClick={() => handlePeginate(currentPage - 1)}
-              className="m-2 font-semibold disabled:text-gray-400"
+              className="m-2  disabled:text-gray-400"
             >
-              {`<<`}Previous
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-left"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M11 7l-5 5l5 5" />
+                <path d="M17 7l-5 5l5 5" />
+              </svg>
             </button>
             {peginateList.map((item) => (
               <button
                 type="button"
                 key={item}
                 className={`p-2  bg-slate-400 font-semibold m-1 px-3 ${
-                  item === currentPage && "text-red-600"
+                  item === currentPage && " text-orange-500"
                 }`}
                 onClick={() => handlePeginate(item)}
               >
@@ -323,9 +361,24 @@ export default function PostList() {
             <button
               disabled={currentPage === totalPages}
               onClick={() => handlePeginate(currentPage + 1)}
-              className="m-2 font-semibold disabled:text-gray-400"
+              className=" m-2 disabled:text-gray-400"
             >
-              Next{`>>`}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-right"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M7 7l5 5l-5 5" />
+                <path d="M13 7l5 5l-5 5" />
+              </svg>
             </button>
           </div>
         </div>

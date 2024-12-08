@@ -1,7 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import {  useAuth } from "../store/AuthContext.jsx";
+import { useAuth } from "../store/AuthContext.jsx";
+import {
+  avatarUpdate,
+  changePassword,
+  getUserProfile,
+  userProfileUpdate,
+} from "../api/index.js";
 
 export default function Settings() {
   const [accountInfo, setAccountInfo] = useState([]);
@@ -29,14 +35,12 @@ export default function Settings() {
 
   const { register, resetField, handleSubmit } = useForm();
 
-  const { signout } = useAuth()
+  const { signout } = useAuth();
 
   const handlePerosonalInfo = async () => {
     setIsClickedAccInfo(true);
     setShowDropdown(false);
-    const result = await axios.get(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/profile`, {
-      withCredentials: true,
-    });
+    const result = await getUserProfile();
     setAccountInfo(result.data.data);
   };
 
@@ -61,14 +65,7 @@ export default function Settings() {
 
   const handleSaveAccInfo = async () => {
     try {
-      const result = await axios.post(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/user/account-update`,
-        editingAccInfo,
-        {
-          withCredentials: true,
-        }
-      );
-
+      const result = await userProfileUpdate(editingAccInfo);
       setIsEditingAccInfo(false);
       setAccountInfo(result.data.data);
     } catch (error) {
@@ -82,7 +79,7 @@ export default function Settings() {
       setAvatarPreview(URL.createObjectURL(file));
     }
   };
-  
+
   const handleAvatarUpload = async (data) => {
     const formData = new FormData();
     formData.append("avatar", data.avatar[0]);
@@ -95,12 +92,7 @@ export default function Settings() {
     //   console.log(`${key}:`, value);
     // }
 
-    await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/avatar`, formData, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    await avatarUpdate(formData)
   };
 
   const handleGeneralSettings = () => {
@@ -125,9 +117,7 @@ export default function Settings() {
 
   const handleSaveEditingPassword = async (data) => {
     try {
-      await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/password-change`, data, {
-        withCredentials: true,
-      });
+      await changePassword();
       resetField("oldPassword");
       resetField("newPassword");
     } catch (error) {

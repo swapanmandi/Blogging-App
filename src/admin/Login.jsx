@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/AuthContext.jsx";
 
 export default function Login() {
@@ -11,11 +11,10 @@ export default function Login() {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  const { signinAdmin} = useAuth();
-  
+  const { adminSignin } = useAuth();
+
   const handleAdminSignin = (data) => {
-   
-    signinAdmin(data);
+    adminSignin(data);
   };
 
   if (loading) {
@@ -46,6 +45,12 @@ export default function Login() {
           ></input>
         </form>
         <ToastContainer />
+        <p>
+          Dont have account. please{" "}
+          <Link to="/admin/signup">
+            <strong>Sign up</strong>
+          </Link>
+        </p>
       </div>
     </div>
   );

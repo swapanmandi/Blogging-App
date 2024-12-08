@@ -7,24 +7,24 @@ import Select from "./Select.jsx";
 import axios from "axios";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-
+import {
+  createPost,
+  editPost,
+  getCategory,
+  getEditingPost,
+} from "../api/index.js";
 
 export default function CreatePost() {
   const [post, setPost] = useState(null);
   const [tag, setTag] = useState("");
   const [tagList, setTagList] = useState([]);
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
     if (id) {
       const editPost = async () => {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/editView/${id}`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await getEditingPost(id);
         //console.log("data", response.data.data);
         setPost(response.data.data);
       };
@@ -68,9 +68,9 @@ export default function CreatePost() {
     formData.append("content", data.content);
     formData.append("status", data.status);
 
-    data.category.forEach((item, index) =>{
+    data.category.forEach((item, index) => {
       formData.append(`category[${index}]`, item);
-    })
+    });
     tagList.forEach((item, index) => {
       formData.append(`tags[${index}]`, item);
     });
@@ -79,8 +79,8 @@ export default function CreatePost() {
       formData.append("featuredImage", data.featuredImage[0]);
     }
 
-    console.log("category:", formData.get("category"));
-    console.log("tags:", formData.get("tags"));
+    // console.log("category:", formData.get("category"));
+    // console.log("tags:", formData.get("tags"));
 
     // for (let [key, value] of formData.entries()) {
     //   console.log(`${key}:`, value);
@@ -88,28 +88,10 @@ export default function CreatePost() {
 
     try {
       if (post) {
-        const result = await axios.put(
-          `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/post/edit/${id}`,
-          formData,
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const result = await editPost(id, formData);
         toast(result.data.message);
       } else {
-        await axios.post(
-         `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/createBlog`,
-          formData,
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        await createPost(formData);
       }
     } catch (error) {
       console.log("Error submitting post", error);
@@ -156,9 +138,7 @@ export default function CreatePost() {
 
   useEffect(() => {
     const getCategories = async () => {
-      const result = await axios.get(`${import.meta.env.VITE_BACKEND_API}/api/v1/blog/get/category`, {
-        withCredentials: true,
-      });
+      const result = await getCategory();
 
       setCategories(result.data.data);
     };
@@ -166,145 +146,143 @@ export default function CreatePost() {
   }, []);
 
   return (
-    <>
-    <div className=" absolute h-12 w-full bg-orange-200">
+    <div className=" bg-red-200 w-full text-black">
+      <form className="flex p-3 flex-col" onSubmit={handleSubmit(submit)}>
+        <Input
+          label="Title:"
+          className="bg-slate-800"
+          placeholder="title"
+          {...register("title", { required: true })}
+        />
 
-      <div>
-        <ul className=" flex justify-around">
-          <li>Save Draft</li>
-          <li>Publish</li>
-          <li>Score</li>
-        </ul>
-      </div>
+        <Input
+          label="Slug:"
+          className="bg-slate-800"
+          placeholder="slug"
+          {...register("slug", { required: true })}
+        />
 
-    </div>
-      <div className=" bg-red-200  w-full flex mt-16 text-black">
-        
-          <form
-            className="flex w-9/12 p-3 flex-col"
-            onSubmit={handleSubmit(submit)}
-          >
-            <Input
-              label="Title:"
-              className="bg-slate-800"
-              placeholder="title"
-              {...register("title", { required: true })}
-            />
+        <div>
+          <label>Content:</label>
+          <PostEditor control={control} defaultValue={getValues("content")} />
+        </div>
 
-            <Input
-              label="Slug:"
-              className="bg-slate-800"
-              placeholder="slug"
-              {...register("slug", { required: true })}
-            />
+        <Input
+          label="Description:"
+          className="bg-slate-800"
+          placeholder="description"
+          {...register("description", { required: true })}
+        />
 
-            <div>
-              <label>Content:</label>
-              <PostEditor
-                control={control}
-                defaultValue={getValues("content")}
-              />
-            </div>
+        <div></div>
 
-            <Input
-              label="Description:"
-              className="bg-slate-800"
-              placeholder="description"
-              {...register("description", { required: true })}
-            />
-
-            <div>
-            
-            </div>
-
-            {/* <Select
-              label="Category:"
-              {...register("category", { required: true })}
-              options={["Category1", "Category2", "Category3"]}
-            /> */}
-{categories?.map( item => (
-  <div className=" flex">
-    {item.category?.map(item => (
-      <div className=" bg-sky-300 p-1 m-1 w-fit flex" key={item}><span className=" m-2">{item}</span>
-      <Input key={item} type="checkbox" value={item} {...register("category", {required: true})}/>
-      </div>
-      
-    ))}
-    
-  </div>
-))}
-          
-
-            <div className="flex">
-              <label>
-                Tags:
-                <input
-                  className=" text-black"
-                  type="text"
-                  placeholder="add tags...."
-                  onChange={handleTagChange}
-                  value={tag}
-                ></input>
-              </label>
-
-              <button
-                type="button"
-                onClick={addTag}
-                className=" p-2 m-2 rounded-md bg-lime-500"
-              >
-                Add
-              </button>
-            </div>
-
-            <div className=" text-black">
-              {tagList?.map((tag, index) => (
-                <span key={index} className="">
-                  {tag}
-                  <Button type="button" onClick={() => removeTag(tag)}>
-                    x
-                  </Button>
-                </span>
-              ))}
-            </div>
-
-            <Input
-              label="Featured Image:"
-              type="file"
-              accept="image/png, image/jpg, image/jpeg, image/gif"
-              {...register("featuredImage")}
-            />
-
-            {post && post.featuredImage && (
-              <div>
-                <img className=" h-80 w-64" src={post.featuredImage} alt="" />
+        {categories?.map((item) => (
+          <div className=" flex flex-wrap">
+            {item.category?.map((item) => (
+              <div className=" bg-sky-300 p-1 m-1 w-fit flex" key={item}>
+                <span className=" m-2">{item}</span>
+                <Input
+                  key={item}
+                  type="checkbox"
+                  value={item}
+                  {...register("category", { required: true })}
+                />
               </div>
-            )}
-
-            <Select
-              options={["active", "inactive"]}
-              label="Status:"
-              className="mb-4"
-              {...register("status", { required: true })}
-            />
-            <Link to="/admin/dashboard/list">
-              <button type="button" className=" bg-green-500 w-full">
-                Cancel
-              </button>
-            </Link>
-            <Button
-              type="submit"
-              bgColor={post ? "bg-green-500" : undefined}
-              className="w-full"
-            >
-              {post ? "Update" : "Submit"}
-            </Button>
-          </form>
-          <div className=" bg-slate-400 h-full w-1/4">
-
+            ))}
           </div>
-       
-        <ToastContainer />
-      </div>
-    </>
+        ))}
+
+        <div className=" flex flex-col">
+          <span> Tags:</span>
+          <div className=" items-center flex">
+            <input
+              className=" text-black h-fit p-1 rounded-md"
+              type="text"
+              placeholder="add tags...."
+              onChange={handleTagChange}
+              value={tag}
+            ></input>{" "}
+            <button
+              type="button"
+              onClick={addTag}
+              className=" p-1 px-2 m-2 rounded-md bg-green-500"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+
+        <div className=" bg-slate-100 text-black flex flex-wrap">
+          {tagList?.map((tag, index) => (
+            <div
+              key={index}
+              className=" bg-orange-400 flex justify-center items-center w-fit h-fit rounded-sm m-2"
+            >
+              <span className=" m-1 w-fit px-1">{tag}</span>
+              <button
+                className=" h-fit flex items-center justify-center p-1 rounded-sm"
+                type="button"
+                onClick={() => removeTag(tag)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  className=" text-red-600 icon icon-tabler icons-tabler-outline icon-tabler-square-letter-x"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M3 3m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+                  <path d="M10 8l4 8" />
+                  <path d="M10 16l4 -8" />
+                </svg>
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <Input
+          label="Featured Image:"
+          type="file"
+          accept="image/png, image/jpg, image/jpeg, image/gif"
+          {...register("featuredImage")}
+        />
+
+        {post && post.featuredImage && (
+          <div>
+            <img className=" h-80 w-64 mb-2" src={post.featuredImage} alt="" />
+          </div>
+        )}
+
+        <Select
+          options={["active", "inactive"]}
+          label="Status:"
+          className="mb-4"
+          {...register("status", { required: true })}
+        />
+        <Link to="/admin/dashboard/list">
+          <button
+            type="button"
+            className=" bg-red-500 w-full p-1 rounded-md mb-2"
+          >
+            Cancel
+          </button>
+        </Link>
+        <Button
+          type="submit"
+          bgColor={post ? "bg-green-500" : undefined}
+          className="w-full rounded-md"
+        >
+          {post ? "Update" : "Publish"}
+        </Button>
+      </form>
+
+      <ToastContainer />
+    </div>
   );
 }

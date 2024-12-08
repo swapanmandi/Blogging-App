@@ -1,18 +1,17 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAuth } from "../store/AuthContext";
+import { useAuth } from "../store/AuthContext.jsx";
+import { Link } from "react-router-dom";
 
 export default function Signup() {
   const { register, handleSubmit } = useForm();
 
-  const { signupAdmin, check } = useAuth();
-  console.log("su", check)
+  const { adminSignup } = useAuth();
 
   const handleSignupAdmin = (data) => {
-    signupAdmin(data);
+    adminSignup(data);
   };
 
   return (
@@ -44,6 +43,12 @@ export default function Signup() {
               type="submit"
             ></input>
           </form>
+          <p>
+            You have a account already. please{" "}
+            <Link to="/admin/signin">
+              <strong>Signin</strong>
+            </Link>
+          </p>
           <ToastContainer />
         </div>
       </div>

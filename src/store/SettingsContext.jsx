@@ -13,17 +13,11 @@ function SettingsProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false);
   const { user, token } = useAuth();
 
-  
   useEffect(() => {
     const getSettings = async () => {
       setIsLoading(true);
       try {
-        const result = await axios.get(
-          `${import.meta.env.VITE_BACKEND_API}/api/v1/settings/get-settings`,
-          {
-            withCredentials: true,
-          }
-        );
+        const result = await getSetting();
         const [settingsObject] = result.data.data;
         setSettings(settingsObject);
         //console.log(" settings data", settingsObject);
@@ -34,7 +28,7 @@ function SettingsProvider({ children }) {
         setIsLoading(false);
       }
     };
-    if(user && token){
+    if (user && token) {
       getSettings();
     }
   }, []);
@@ -44,7 +38,6 @@ function SettingsProvider({ children }) {
       <SettingsContext.Provider value={{ settings }}>
         {isLoading ? <div>Loading...</div> : children}
       </SettingsContext.Provider>
-      ;
     </>
   );
 }

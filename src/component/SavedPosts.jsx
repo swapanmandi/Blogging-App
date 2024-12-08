@@ -2,25 +2,20 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
-import {useAuth } from "../store/AuthContext.jsx";
+import { useAuth } from "../store/AuthContext.jsx";
+import { getSavedPosts } from "../api/index.js";
 
 export default function SavedPosts() {
   const [loading, setLoading] = useState(true);
   const [savedPosts, setSavedPosts] = useState(null);
 
-  const {user} = useAuth()
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const savedResult = await axios.get(
-          `${import.meta.env.VITE_BACKEND_API}/api/v1/blog/posts/saved-posts`,
-          {
-            withCredentials: true,
-          }
-        );
-
-        setSavedPosts(savedResult.data.data);
+        const result = await getSavedPosts();
+        setSavedPosts(result.data.data);
         //console.log("save data", savedResult.data.data)
       } catch (error) {
         console.error("Error to fetch saved posts", error);
@@ -32,8 +27,7 @@ export default function SavedPosts() {
     user ? fetchPosts() : setLoading(false);
   }, []);
 
-
-  const displayPosts = savedPosts?.slice(0,6)
+  const displayPosts = savedPosts?.slice(0, 6);
   return (
     <>
       {loading ? (
@@ -74,7 +68,6 @@ export default function SavedPosts() {
                 </Link>
               ))}
             </div>
-
           </aside>
         </div>
       )}

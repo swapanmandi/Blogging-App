@@ -4,6 +4,12 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../store/AuthContext.jsx";
+import {
+  avatarUpdate,
+  changePassword,
+  getAdminProfile,
+  userProfileUpdate,
+} from "../api/index.js";
 
 export default function Profile() {
   const [avatar, setAvatar] = useState(null);
@@ -25,7 +31,6 @@ export default function Profile() {
     useForm();
 
   const { signout, check } = useAuth();
-  
 
   const clickAccInfo = () => {
     setShowAccInfo(true);
@@ -56,13 +61,8 @@ export default function Profile() {
     setAvatar(data.avatar[0]);
 
     formData.append("avatar", data.avatar[0]);
-
-    await axios.post(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/avatar`, formData, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    await avatarUpdate(formData);
+    setAvatar(null)
   };
 
   const editPersonanInfo = () => {
@@ -83,14 +83,7 @@ export default function Profile() {
 
   const SaveEditPersonalInfo = async (data) => {
     try {
-      const result = await axios.post(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/user/account-update`,
-        { fullName: data.fullName, email: data.email },
-        {
-          withCredentials: true,
-        }
-      );
-
+      await userProfileUpdate(data);
       setEditingPersonalInfo(false);
       setShowAccInfo(true);
     } catch (error) {
@@ -105,13 +98,7 @@ export default function Profile() {
 
   const saveEditPassword = async (data) => {
     try {
-      await axios.post(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/user/password-change`,
-        { oldPassword: data.oldPassword, newPassword: data.newPassword },
-        {
-          withCredentials: true,
-        }
-      );
+      await changePassword(data);
       setEditingPassword(false);
       setShowAccInfo(true);
     } catch (error) {
@@ -126,9 +113,7 @@ export default function Profile() {
 
   useEffect(() => {
     const profile = async () => {
-      const result = await axios.get(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/admin/profile`, {
-        withCredentials: true,
-      });
+      const result = await getAdminProfile()
       setProfileInfo(result.data.data);
       toast(result.data?.message);
     };
@@ -138,6 +123,8 @@ export default function Profile() {
   const handleSignout = () => {
     signout();
   };
+
+  //console.log(avatar)
   return (
     <>
       <div className=" w-full items-center flex justify-center overflow-hidden">
@@ -164,9 +151,9 @@ export default function Profile() {
         {/* first modal */}
 
         {showAccInfo && (
-          <div className=" absolute p-3 rounded-md bg-slate-200">
+          <div className=" p-3 rounded-md bg-slate-200">
             <div className=" flex flex-col justify-center items-center">
-              <div className=" overflow-hidden flex justify-center items-center  bg-slate-100 h-24 w-24 rounded-full m-2">
+              <div className=" overflow-hidden flex justify-center items-center  bg-slate-100 h-24 w-24 rounded-full m-2 text-center">
                 {avatar || profileInfo?.avatar ? (
                   <img
                     src={avatar ? avatar : profileInfo?.avatar}
@@ -229,7 +216,7 @@ export default function Profile() {
         {/* second modal */}
 
         {editingPersonalInfo && (
-          <div className=" absolute h-fit w-fit bg-orange-400 p-1 flex flex-col rounded-md shadow-lg ">
+          <div className=" h-fit w-fit bg-orange-400 p-1 flex flex-col rounded-md shadow-lg ">
             <form onSubmit={handleSubmitPersonalInfo(SaveEditPersonalInfo)}>
               <input
                 className="w-full mt-1 p-2 border border-gray-300 rounded-md "
@@ -262,7 +249,7 @@ export default function Profile() {
         {/* third modal */}
 
         {editingPassword && (
-          <div className=" absolute bg-lime-300 p-2  rounded-md">
+          <div className=" bg-lime-300 p-2  rounded-md">
             <form
               onSubmit={handleSubmitPassword(saveEditPassword)}
               className=" flex flex-col"
