@@ -26,9 +26,7 @@ export default function Carousel() {
   };
 
   const prevSlide = () => {
-    
-      setCurrentIndex(currentIndex === 0 ? len - 1 : currentIndex - 1);
-      
+    setCurrentIndex(currentIndex === 0 ? len - 1 : currentIndex - 1);
   };
 
   useEffect(() => {
@@ -36,7 +34,7 @@ export default function Carousel() {
       slideIntervalRef.current = setInterval(() => {
         nextSlide();
       }, 5000);
-  
+
       return () => clearInterval(slideIntervalRef.current);
     }
   }, [currentIndex, isPaused]);
@@ -49,25 +47,43 @@ export default function Carousel() {
   };
   return (
     <div className=" w-full flex justify-center">
-      <div className=" w-11/12 lg:h-60 bg-slate-500 rounded-md m-4 lg:flex lg:items-center lg:justify-between">
-        <button className=" mx-3" onClick={prevSlide}>{`<<`}</button>
+      <div className=" w-11/12 lg:h-60 bg-slate-500 rounded-md m-4 flex items-center justify-between">
+        <button className=" mx-3" onClick={prevSlide}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="icon icon-tabler icons-tabler-outline icon-tabler-square-chevrons-left"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M16 15l-3 -3l3 -3" />
+            <path d="M11 15l-3 -3l3 -3" />
+            <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+          </svg>
+        </button>
         <div
           className=" m-2 rounded cursor-pointer"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <div
-            className={`overflow-hidden flex flex-col p-3 lg:flex-row justify-center items-center`}
-          >
-            {CarouselData.length >0 && <img
-              src={`${CarouselData[currentIndex]?.featuredImage}`}
-              className=" h-40 w-36"
-            ></img>}
+          <div className=" w-full overflow-hidden flex flex-col p-1 lg:flex-row justify-center items-center">
+            {CarouselData.length > 0 && (
+              <img
+                src={`${CarouselData[currentIndex]?.featuredImage}`}
+                className=" h-40 w-36 m-2"
+              ></img>
+            )}
             <div className=" flex flex-col">
-              <h2 className=" h-8 m-2 w-fit p-1 rounded-md font-bold">
+              <h2 className=" h-8 w-fit p-1 font-bold overflow-hidden">
                 {CarouselData[currentIndex]?.title}
               </h2>
-              <p className=" h-32 w-80 m-2 p-2 overflow-hidden">
+              <p className=" w-full h-24 lg:h-32 lg:w-80 p-2 overflow-hidden">
                 {CarouselData[currentIndex]?.description}
               </p>
             </div>
@@ -79,14 +95,32 @@ export default function Carousel() {
                   <span
                     className={` ${
                       currentIndex === item - 1 ? " bg-green-500" : "bg-white"
-                    } h-2 w-2 m-1 rounded-full`}
+                    } h-12 w-12 m-1 rounded-full`}
                   ></span>
                 </div>
               )
             )}
           </div>
         </div>
-        <button className=" mx-3" onClick={nextSlide}>{`>>`}</button>
+        <button className=" mx-3" onClick={nextSlide}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            class="icon icon-tabler icons-tabler-outline icon-tabler-square-chevrons-right"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M8 9l3 3l-3 3" />
+            <path d="M13 9l3 3l-3 3" />
+            <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+          </svg>
+        </button>
       </div>
     </div>
   );

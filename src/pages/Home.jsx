@@ -12,12 +12,12 @@ export default function Home() {
         <div className=" mt-5 lg:flex lg:flex-col lg:w-full">
           <Carousel />
 
-          <main className=" overflow-hidden lg:w-11/12 m-4">
+          <main className=" overflow-hidden m-2">
             <PostList />
           </main>
         </div>
 
-        <div className=" w-1/3">
+        <div className=" lg:w-1/3 w-full">
           <MainSidebar />
           <SavedPosts />
         </div>

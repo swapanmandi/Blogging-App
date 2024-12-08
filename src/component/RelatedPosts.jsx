@@ -6,28 +6,30 @@ export default function ({ posts, heading }) {
   const relatedPosts = posts?.slice(0, 3);
 
   return (
-    <>
-      <div className=" m-2">
-        <h1 className=" font-bold text-lg ml-6 p-1 bg-orange-400 rounded-md w-fit">
+
+      <div className=" w-full">
+        <h1 className=" font-bold text-lg p-1 m-2 bg-orange-400 rounded-md w-fit">
           {heading}
         </h1>
-        <div className="flex">
+        <div className=" w-full flex flex-col justify-center items-center lg:flex lg:flex-row">
           {relatedPosts?.map((item) => (
-            <Link to={`/blogs/${item._id}`} key={item._id}>
-              <div
-                className=" dark:bg-slate-950 dark:text-white w-[260px] h-[340px] p-2 m-2 rounded-md"
-              >
-                <img
-                  className="w-[324px] h-[281px] rounded-md"
-                  src={item.featuredImage}
-                ></img>
-                <h1 className=" font-semibold font-serif">{item.title}</h1>
-                <p>{item.tags}</p>
-              </div>
+            <Link
+              className=" w-full bg-slate-200  flex flex-col items-center justify-center  dark:bg-slate-950 dark:text-white overflow-hidden p-2 lg:m-2 rounded-md  my-2"
+              to={`/blogs/${item._id}`}
+              key={item._id}
+            >
+              <img
+                className="w-[254px] h-[290px] rounded-md"
+                src={item.featuredImage}
+              ></img>
+              <h1 className=" w-full h-12 p-2 text-center font-semibold font-serif">
+                {item.title}
+              </h1>
+              {/* <p>{item.tags}</p> */}
             </Link>
           ))}
         </div>
       </div>
-    </>
+  
   );
 }
