@@ -50,15 +50,15 @@ const Navbar = () => {
           <div
             className={` relative hidden lg:visible w-full lg:flex lg:flex-row lg:justify-evenly space-x-4`}
           >
-            {menu.map((item,index) => (
+            {menu.map((item, index) => (
               <Link
-              key={index}
+                key={index}
                 to={
                   token && user?._id && item.name === "Login"
                     ? "/settings"
                     : item.url
                 }
-                className=" bg-emerald-800 rounded-md p-1 m-1 my-4 lg:my-2 text-center lg:rounded-none lg:bg-inherit lg:text-black font-semibold"
+                className=" bg-emerald-800 rounded-md p-1 m-1 my-4 lg:my-2 text-center lg:rounded-none lg:bg-inherit lg:text-black font-semibold dark:text-white"
               >
                 {token && user?._id && item.name === "Login"
                   ? "Account"
@@ -169,8 +169,18 @@ const Navbar = () => {
             } h-fit flex justify-between pl-2 pr-2 items-center dark:bg-slate-900 overflow-hidden text-black `}
           >
             {menu.map((item, index) => (
-              <Link key={index} to={token && user?._id && item.name === "Login" ? "/settings" : item.url} className=" p-1 font-semibold">
-                {token && user?._id && item.name === "Login" ? "Account" : item.name}
+              <Link
+                key={index}
+                to={
+                  token && user?._id && item.name === "Login"
+                    ? "/settings"
+                    : item.url
+                }
+                className=" p-1 font-semibold"
+              >
+                {token && user?._id && item.name === "Login"
+                  ? "Account"
+                  : item.name}
               </Link>
             ))}
           </div>

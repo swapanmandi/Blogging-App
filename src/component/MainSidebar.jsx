@@ -51,7 +51,7 @@ export default function MainSidebar() {
               {displayPosts?.map((item) => (
                 <Link
                   key={item._id}
-                  className=" lg:w-full bg-slate-200 h-28 m-2 p-1 flex lg:flex items-center lg:flex-row"
+                  className=" lg:w-full  h-28 m-2 p-1 flex lg:flex items-center lg:flex-row"
                   to={`/blogs/${item._id}`}
                 >
                   <div className=" min-w-[30%] w-[30%] h-24 lg:w-[88 px] lg:h-[88px] rounded-md m-1">

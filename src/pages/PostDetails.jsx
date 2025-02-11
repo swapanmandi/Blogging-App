@@ -168,7 +168,7 @@ export default function Post() {
         <div className=" bg-red-500 dark:bg-slate-950 dark:text-white lg:w-10/12 h-fit p-1  m-1 lg:m-2">
           {viewPost.map((item) => (
             <div
-              className=" bg-white items-center flex justify-center flex-col"
+              className=" bg-white dark:bg-slate-900 items-center flex justify-center flex-col"
               key={item._id}
             >
               <img
@@ -218,7 +218,8 @@ export default function Post() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="icon icon-tabler icons-tabler-outline icon-tabler-calendar-due">
+                        className="icon icon-tabler icons-tabler-outline icon-tabler-calendar-due"
+                      >
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
                         <path d="M16 3v4" />
@@ -274,7 +275,7 @@ export default function Post() {
                       <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                       <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                     </svg>
-                   <span> {Math.round(totalViews / 2)}</span>
+                    <span> {Math.round(totalViews / 2)}</span>
                   </div>
                   <span className=" cursor-pointer p-2" onClick={savePost}>
                     {isSaved ? (

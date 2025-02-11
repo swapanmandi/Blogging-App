@@ -8,7 +8,7 @@ import SavedPosts from "../component/SavedPosts.jsx";
 export default function Home() {
   return (
     <>
-      <div className=" flex flex-col  lg:overflow-hidden lg:flex lg:flex-row bg-slate-50 text-cyan-400">
+      <div className=" flex flex-col  lg:overflow-hidden lg:flex lg:flex-row bg-slate-50 text-cyan-400 dark:bg-gray-800 dark:text-gray-200">
         <div className=" mt-5 lg:flex lg:flex-col lg:w-full">
           <Carousel />
 

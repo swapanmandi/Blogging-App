@@ -30,7 +30,7 @@ function App() {
 
   useEffect(() => {
     document.querySelector("html").classList.remove("dark", "light");
-    document.querySelector("body").classList.add("dark:bg-black");
+    document.querySelector("body").classList.add("dark:bg-gray-800");
     document.querySelector("html").classList.add(themeMode);
   }, [themeMode]);
 
