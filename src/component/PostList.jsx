@@ -339,7 +339,7 @@ export default function PostList() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-left"
+                className="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-left"
               >
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M11 7l-5 5l5 5" />
@@ -373,7 +373,7 @@ export default function PostList() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-right"
+                className="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-right"
               >
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M7 7l5 5l-5 5" />

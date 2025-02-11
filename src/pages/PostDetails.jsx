@@ -197,7 +197,7 @@ export default function Post() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-user"
+                        className="icon icon-tabler icons-tabler-outline icon-tabler-user"
                       >
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
@@ -218,7 +218,7 @@ export default function Post() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-due">
+                        className="icon icon-tabler icons-tabler-outline icon-tabler-calendar-due">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
                         <path d="M16 3v4" />
@@ -268,7 +268,7 @@ export default function Post() {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-eye"
+                      className="icon icon-tabler icons-tabler-outline icon-tabler-eye"
                     >
                       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                       <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
@@ -288,7 +288,7 @@ export default function Post() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-browser-check"
+                        className="icon icon-tabler icons-tabler-outline icon-tabler-browser-check"
                       >
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M4 4m0 1a1 1 0 0 1 1 -1h14a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-14a1 1 0 0 1 -1 -1z" />
@@ -307,7 +307,7 @@ export default function Post() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-browser-plus"
+                        className="icon icon-tabler icons-tabler-outline icon-tabler-browser-plus"
                       >
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M4 4m0 1a1 1 0 0 1 1 -1h14a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-14a1 1 0 0 1 -1 -1z" />
@@ -326,7 +326,7 @@ export default function Post() {
                         height="24"
                         viewBox="0 0 24 24"
                         fill="currentColor"
-                        class="icon icon-tabler icons-tabler-filled icon-tabler-thumb-up"
+                        className="icon icon-tabler icons-tabler-filled icon-tabler-thumb-up"
                       >
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M13 3a3 3 0 0 1 2.995 2.824l.005 .176v4h2a3 3 0 0 1 2.98 2.65l.015 .174l.005 .176l-.02 .196l-1.006 5.032c-.381 1.626 -1.502 2.796 -2.81 2.78l-.164 -.008h-8a1 1 0 0 1 -.993 -.883l-.007 -.117l.001 -9.536a1 1 0 0 1 .5 -.865a2.998 2.998 0 0 0 1.492 -2.397l.007 -.202v-1a3 3 0 0 1 3 -3z" />
@@ -343,7 +343,7 @@ export default function Post() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"
+                        className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"
                       >
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" />
@@ -374,7 +374,7 @@ export default function Post() {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-message"
+                      className="icon icon-tabler icons-tabler-outline icon-tabler-message"
                     >
                       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                       <path d="M8 9h8" />
@@ -398,7 +398,7 @@ export default function Post() {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-share-2"
+                      className="icon icon-tabler icons-tabler-outline icon-tabler-share-2"
                     >
                       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                       <path d="M8 9h-1a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-8a2 2 0 0 0 -2 -2h-1" />
@@ -425,7 +425,7 @@ export default function Post() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-left"
+                        className="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-left"
                       >
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M11 7l-5 5l5 5" />
@@ -449,7 +449,7 @@ export default function Post() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-right"
+                        className="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-right"
                       >
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M7 7l5 5l-5 5" />

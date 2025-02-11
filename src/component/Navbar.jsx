@@ -50,8 +50,9 @@ const Navbar = () => {
           <div
             className={` relative hidden lg:visible w-full lg:flex lg:flex-row lg:justify-evenly space-x-4`}
           >
-            {menu.map((item) => (
+            {menu.map((item,index) => (
               <Link
+              key={index}
                 to={
                   token && user?._id && item.name === "Login"
                     ? "/settings"
@@ -146,7 +147,7 @@ const Navbar = () => {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-xbox-x"
+                        className="icon icon-tabler icons-tabler-outline icon-tabler-xbox-x"
                       >
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M12 21a9 9 0 0 0 9 -9a9 9 0 0 0 -9 -9a9 9 0 0 0 -9 9a9 9 0 0 0 9 9z" />
@@ -167,8 +168,8 @@ const Navbar = () => {
               isOpened ? "visible" : "hidden"
             } h-fit flex justify-between pl-2 pr-2 items-center dark:bg-slate-900 overflow-hidden text-black `}
           >
-            {menu.map((item) => (
-              <Link to={token && user?._id && item.name === "Login" ? "/settings" : item.url} className=" p-1 font-semibold">
+            {menu.map((item, index) => (
+              <Link key={index} to={token && user?._id && item.name === "Login" ? "/settings" : item.url} className=" p-1 font-semibold">
                 {token && user?._id && item.name === "Login" ? "Account" : item.name}
               </Link>
             ))}
