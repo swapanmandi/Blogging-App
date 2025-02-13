@@ -43,11 +43,11 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className=" flex bg-slate-700 justify-evenly p-2 dark:bg-slate-500">
+        <div className=" flex bg-slate-700 p-2 justify-center space-x-1 dark:bg-slate-500">
           <span>
-            Copyright 2024 © <strong>BlogPress</strong>{" "}
+            Copyright 2025 © <strong>BlogPress.</strong>
           </span>
-          <h2>All Rights Reserved</h2>
+          <h2>All Rights Reserved.</h2>
         </div>
       </footer>
     </>
