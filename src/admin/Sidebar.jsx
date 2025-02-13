@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function Sidebar() {
   return (
     <>
-      <div className=" bg-red-600 w-fit h-screen">
+      <div className=" bg-slate-800 w-fit h-screen">
         <ul>
           <Link to="/admin/dashboard/list">
             <li className="w-fit bg-slate-100 rounded-md p-1 m-2">All Posts</li>
