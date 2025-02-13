@@ -22,7 +22,7 @@ export default function List() {
 
   const handleDelete = async (id) => {
     try {
-      const result = await deletePost(id)
+      const result = await deletePost(id);
       toast(result.data.message);
       setIsDeleted(true);
     } catch (error) {
@@ -39,45 +39,39 @@ export default function List() {
   };
 
   return (
-    <>
-      <div className=" w-full h-fit min-h-screen bg-slate-800">
-        <div className=" bg-slate-500 grid grid-cols-5 gap-2">
-          <div className=" bg-slate-50 text-center cursor-pointer">Title</div>
-          <div className="bg-slate-50 text-center cursor-pointer">
-            Published Date
-          </div>
-          <div className=" bg-slate-50 text-center cursor-pointer">
-            Category
-          </div>
-          <div className="bg-slate-50 text-center cursor-pointer">Edit</div>
-          <div className=" bg-slate-50 text-center cursor-pointer">Delete</div>
+    <div className=" w-full h-full ">
+      <div className=" bg-slate-500 grid grid-cols-5 gap-2 m-1">
+        <div className=" bg-slate-50 text-center cursor-pointer">Title</div>
+        <div className="bg-slate-50 text-center cursor-pointer">
+          Published Date
         </div>
-
-        {editList?.map((item) => (
-          <div
-            className=" h-fit text-black bg-slate-300  p-1 w-full m-1 my-2 flex justify-around"
-            key={item._id}
-          >
-            <h3 className=" w-80">{item.title}</h3>
-            <span>{formatDate(item.publishedAt)}</span>
-            <div className=" w-60">
-              <span className="">{item.category}</span>
-            </div>
-            <span>
-              <Link to={`/admin/dashboard/blog/post/edit/${item._id}`}>
-                Edit
-              </Link>
-            </span>
-            <span
-              className=" cursor-pointer"
-              onClick={() => handleDelete(item._id)}
-            >
-              Delete
-            </span>
-          </div>
-        ))}
-        <ToastContainer />
+        <div className=" bg-slate-50 text-center cursor-pointer">Category</div>
+        <div className="bg-slate-50 text-center cursor-pointer">Edit</div>
+        <div className=" bg-slate-50 text-center cursor-pointer">Delete</div>
       </div>
-    </>
+
+      {editList?.map((item) => (
+        <div
+          className=" h-fit text-black bg-slate-300 m-1 my-2 flex justify-around"
+          key={item._id}
+        >
+          <h3 className=" w-80">{item.title}</h3>
+          <span>{formatDate(item.publishedAt)}</span>
+          <div className=" w-60">
+            <span className="">{item.category}</span>
+          </div>
+          <span>
+            <Link to={`/admin/dashboard/blog/post/edit/${item._id}`}>Edit</Link>
+          </span>
+          <span
+            className=" cursor-pointer"
+            onClick={() => handleDelete(item._id)}
+          >
+            Delete
+          </span>
+        </div>
+      ))}
+      <ToastContainer />
+    </div>
   );
 }
