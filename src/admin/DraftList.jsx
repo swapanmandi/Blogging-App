@@ -30,7 +30,7 @@ export default function DraftList() {
 
   return (
     <>
-      <div className=" w-full h-screen bg-slate-800">
+      <div className=" bg-slate-800">
         {draftList?.map((item) => (
           <div
             className=" h-10 bg-red-600 rounded-md p-1 w-full m-3 flex justify-around"
