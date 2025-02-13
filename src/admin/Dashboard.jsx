@@ -32,7 +32,7 @@ export default function Dashboard() {
   return (
     <div className=" w-full flex">
       <div className=" relative h-svh w-full flex">
-        <div className="  w-full grid grid-cols-2 gap-4 p-2  bg-gray-700 h-fit lg:grid lg:grid-cols-5">
+        <div className="  w-full grid grid-cols-2 gap-4 p-2  h-fit lg:grid lg:grid-cols-5">
           <div className="  h-20 items-center flex flex-col bg-slate-300  ">
             <span>All Users</span>
             <span>{userCount}</span>
