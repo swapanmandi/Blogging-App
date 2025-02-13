@@ -20,6 +20,7 @@ export default function CreatePost() {
   const [tagList, setTagList] = useState([]);
   const [categories, setCategories] = useState([]);
   const { id } = useParams();
+  console.log("sate category", categories);
 
   useEffect(() => {
     if (id) {
@@ -67,10 +68,13 @@ export default function CreatePost() {
     formData.append("description", data.description);
     formData.append("content", data.content);
     formData.append("status", data.status);
-
-    data.category.forEach((item, index) => {
-      formData.append(`category[${index}]`, item);
-    });
+    //console.log(data);
+    console.log(data.category.length);
+    data.category.length > 1
+      ? data?.category?.forEach((item, index) => {
+          formData.append(`category[${index}]`, item);
+        })
+      : formData.append("category", data.category);
     tagList.forEach((item, index) => {
       formData.append(`tags[${index}]`, item);
     });
@@ -146,8 +150,11 @@ export default function CreatePost() {
   }, []);
 
   return (
-    <div className=" bg-red-200 w-full text-black">
-      <form className="flex p-3 flex-col" onSubmit={handleSubmit(submit)}>
+    <div className=" w-full h-screen flex justify-center">
+      <form
+        className=" bg-slate-400 flex p-3 flex-col w-8/12 max-h-[80vh] overflow-y-auto"
+        onSubmit={handleSubmit(submit)}
+      >
         <Input
           label="Title:"
           className="bg-slate-800"
@@ -162,8 +169,8 @@ export default function CreatePost() {
           {...register("slug", { required: true })}
         />
 
-        <div>
-          <label>Content:</label>
+        <div className=" mb-2">
+          <label className=" pb-3">Content:</label>
           <PostEditor control={control} defaultValue={getValues("content")} />
         </div>
 
@@ -174,12 +181,12 @@ export default function CreatePost() {
           {...register("description", { required: true })}
         />
 
-        <div></div>
+        <label>Categories:</label>
 
         {categories?.map((item) => (
           <div className=" flex flex-wrap">
             {item.category?.map((item) => (
-              <div className=" bg-sky-300 p-1 m-1 w-fit flex" key={item}>
+              <div className=" p-1 m-1 w-fit flex items-center" key={item}>
                 <span className=" m-2">{item}</span>
                 <Input
                   key={item}
@@ -193,7 +200,7 @@ export default function CreatePost() {
         ))}
 
         <div className=" flex flex-col">
-          <span> Tags:</span>
+          <label> Tags:</label>
           <div className=" items-center flex">
             <input
               className=" text-black h-fit p-1 rounded-md"
@@ -201,7 +208,7 @@ export default function CreatePost() {
               placeholder="add tags...."
               onChange={handleTagChange}
               value={tag}
-            ></input>{" "}
+            ></input>
             <button
               type="button"
               onClick={addTag}
@@ -212,11 +219,11 @@ export default function CreatePost() {
           </div>
         </div>
 
-        <div className=" bg-slate-100 text-black flex flex-wrap">
+        <div className=" text-black flex flex-wrap">
           {tagList?.map((tag, index) => (
             <div
               key={index}
-              className=" bg-orange-400 flex justify-center items-center w-fit h-fit rounded-sm m-2"
+              className=" bg-orange-300 flex justify-center items-center w-fit h-fit rounded-sm m-2"
             >
               <span className=" m-1 w-fit px-1">{tag}</span>
               <button
