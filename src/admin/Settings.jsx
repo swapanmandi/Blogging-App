@@ -121,7 +121,7 @@ export default function Settings() {
 
   return (
     <div className=" w-full h-full flex justify-center overflow-hidden">
-    <form onSubmit={handleSubmit(saveSettings)} className=" h-full absolute w-2/3 overflow-y-scroll">
+    <form onSubmit={handleSubmit(saveSettings)} className=" bg-slate-100 h-full absolute w-2/3 overflow-y-scroll">
       <section className="mb-4">
         <label htmlFor="siteTitle" className="block m-2 font-medium">Site Title</label>
         <input
