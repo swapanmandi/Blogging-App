@@ -165,10 +165,10 @@ export default function Post() {
   return (
     <div className=" w-full flex flex-col ">
       <div className=" w-full flex flex-col lg:flex lg:flex-row">
-        <div className=" bg-red-500 dark:bg-slate-950 dark:text-white lg:w-10/12 h-fit p-1  m-1 lg:m-2">
+        <div className=" bg-slate-100 dark:bg-slate-950 dark:text-white lg:w-10/12 h-fit p-1 lg:m-2 lg:pb-10 overflow-hidden">
           {viewPost.map((item) => (
             <div
-              className=" bg-white dark:bg-slate-900 items-center flex justify-center flex-col"
+              className=" dark:bg-slate-900 items-center flex justify-center flex-col"
               key={item._id}
             >
               <img
@@ -181,9 +181,9 @@ export default function Post() {
               </div>
 
               {/* -------------content--------------- */}
-              <div className=" m-2">{parse(item.content)}</div>
+              <div className=" w-full overflow-auto p-2 m-2">{parse(item.content)}</div>
 
-              <div className=" w-full flex flex-col space-y-2 my-3">
+              <div className=" bg-slate-400 dark:bg-slate-800 w-full flex flex-col space-y-2 my-3">
                 <div className=" flex justify-between">
                   {showAdminOnPost && (
                     <div className=" flex p-1 m-2  w-fit">
@@ -257,7 +257,7 @@ export default function Post() {
               </div>
 
               <div className=" w-full  mt-2 items-center flex flex-col p-1  lg:flex justify-around overflow-hidden">
-                <div className=" bg-red-400 rounded-md h-10 flex justify-center  items-center w-full lg:w-fit m-3 space-x-5">
+                <div className=" bg-slate-400 dark:bg-slate-800 rounded-md h-10 flex justify-center  items-center w-full lg:w-fit m-3 space-x-5">
                   <div className=" flex p-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -468,7 +468,7 @@ export default function Post() {
 
         <div className="">
           <MainSidebar />
-          <SavedPosts />
+          {user && <SavedPosts />}
         </div>
       </div>
       <RelatedPosts posts={posts} heading={"Related Posts"} />
