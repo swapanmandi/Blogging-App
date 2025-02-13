@@ -11,9 +11,9 @@ export default function Routes() {
   return (
     <AuthProvider>
       <SettingsProvider>
-        <div className=" w-screen h-screen ">
+        <div>
           <Navbar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
-          <div className=" flex flex-row w-screen">
+          <div className=" flex flex-row">
             {showSidebar && <Sidebar />}
             <Outlet />
           </div>
