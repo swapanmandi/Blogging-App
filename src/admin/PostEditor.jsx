@@ -13,7 +13,7 @@ export default function PostEditor({name, control, defaultValue=""}) {
           control={control}
           render={({ field }) => (
             <Editor
-              apiKey="ajp3n7se5578ak4umy637rc7xtzywea33whbrluddfbjp92d"
+              apiKey= {import.meta.VITE_RICH_TEXT_EDITOR_API}
               initialValue = {defaultValue}
               init={{
                 branding: false,
