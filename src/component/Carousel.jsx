@@ -46,8 +46,8 @@ export default function Carousel() {
     setIsPaused(false);
   };
   return (
-    <div className=" w-full flex justify-center">
-      <div className=" w-11/12 lg:h-60 bg-slate-500 rounded-md m-4 flex items-center justify-between">
+    <div className=" relative  w-full flex justify-center">
+      <div className=" w-full mx-2 lg:h-60 bg-slate-500 rounded-md flex items-center justify-between">
         <button className=" mx-3" onClick={prevSlide}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
