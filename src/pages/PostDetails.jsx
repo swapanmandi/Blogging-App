@@ -163,9 +163,9 @@ export default function Post() {
   };
 
   return (
-    <div className=" w-full flex flex-col ">
+    <div className="top-12 h-full w-full flex flex-col">
       <div className=" w-full flex flex-col lg:flex lg:flex-row">
-        <div className=" bg-slate-100 dark:bg-slate-950 dark:text-white lg:w-10/12 h-fit p-1 lg:m-2 lg:pb-10 overflow-hidden">
+        <div className=" bg-slate-100 dark:bg-slate-900 dark:text-white lg:w-10/12 h-fit p-2 lg:m-2 lg:pb-10 overflow-hidden">
           {viewPost.map((item) => (
             <div
               className=" dark:bg-slate-900 items-center flex justify-center flex-col"
@@ -181,12 +181,14 @@ export default function Post() {
               </div>
 
               {/* -------------content--------------- */}
-              <div className=" w-full overflow-auto p-2 m-2">{parse(item.content)}</div>
+              <div className=" w-full overflow-auto p-2 m-2">
+                {parse(item.content)}
+              </div>
 
-              <div className=" bg-slate-400 dark:bg-slate-800 w-full flex flex-col space-y-2 my-3">
+              <div className=" bg-slate-400 dark:bg-slate-800 w-full flex flex-col space-y-2 my-3 p-3">
                 <div className=" flex justify-between">
                   {showAdminOnPost && (
-                    <div className=" flex p-1 m-2  w-fit">
+                    <div className=" flex p-1 my-2 gap-2  w-fit">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -207,7 +209,7 @@ export default function Post() {
                     </div>
                   )}
                   {showDateOnPost && (
-                    <div className=" flex p-1 m-2">
+                    <div className=" flex p-1 m-2 gap-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -232,7 +234,7 @@ export default function Post() {
                   )}
                 </div>
 
-                <div className="  ">
+                <div className="my-3">
                   <span className=" m-2 font-medium">Categories:</span>
                   {showCategoryOnPost &&
                     item.category?.map((item) => (
@@ -242,13 +244,13 @@ export default function Post() {
                     ))}
                 </div>
 
-                <div className="  ">
-                  <span className=" m-2 font-medium">Tags:</span>
+                <div className="content-center my-3 font-medium">
+                <span className=" m-2 font-medium">Tags:</span>
                   {showTagOnPost &&
                     item.tags?.map((item) => (
                       <span
                         key={item}
-                        className=" bg-orange-300 rounded-md m-1 px-1"
+                        className=" bg-orange-300 rounded-md m-2 p-1 text-center "
                       >
                         {item}
                       </span>
@@ -466,7 +468,7 @@ export default function Post() {
           ))}
         </div>
 
-        <div className="">
+        <div className=" w-full lg:max-w-96">
           <MainSidebar />
           {user && <SavedPosts />}
         </div>
