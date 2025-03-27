@@ -4,8 +4,7 @@ import PostEditor from "./PostEditor.jsx";
 import Button from "./Button.jsx";
 import Input from "./Input.jsx";
 import Select from "./Select.jsx";
-import axios from "axios";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import {
   createPost,
@@ -20,7 +19,7 @@ export default function CreatePost() {
   const [tagList, setTagList] = useState([]);
   const [categories, setCategories] = useState([]);
   const { id } = useParams();
-  console.log("sate category", categories);
+  //console.log("sate category", categories);
 
   useEffect(() => {
     if (id) {
@@ -69,12 +68,13 @@ export default function CreatePost() {
     formData.append("content", data.content);
     formData.append("status", data.status);
     //console.log(data);
-    console.log(data.category.length);
-    data.category.length > 1
+    //console.log("cat len", data.category.length);
+    data.category.length > 0
       ? data?.category?.forEach((item, index) => {
           formData.append(`category[${index}]`, item);
         })
       : formData.append("category", data.category);
+
     tagList.forEach((item, index) => {
       formData.append(`tags[${index}]`, item);
     });
