@@ -124,7 +124,7 @@ export default function PostList() {
 
   return (
     <>
-      <div className=" overflow-hidden lg:w-full">
+      <div className=" pt-4 overflow-hidden lg:w-full">
         <div className=" flex justify-between mx-2">
           <h2
             onClick={handleFilterOpen}
@@ -244,7 +244,7 @@ export default function PostList() {
         {loading ? (
           [...Array(5)].map((_, index) => (
             <div
-              className=" flex flex-col bg-white dark:bg-slate-950 dark:text-white p-4 text-md m-2 rounded-xl"
+              className=" flex flex-col bg-white dark:bg-slate-900 dark:text-white p-4 text-md m-2 rounded-xl"
               key={index}
             >
               <Skeleton width={324} height={281} />
@@ -273,7 +273,7 @@ export default function PostList() {
                 className={
                   isGrid
                     ? " bg-slate-200 w-[280px] m-2 h-[400px] overflow-hidden flex flex-col items-center p-2 mb-8 rounded-md"
-                    : "flex flex-col w-full lg:flex lg:flex-row p-4 text-md lg:m-4 rounded-xl bg-slate-200 xs:text-red-500 dark:bg-slate-950 dark:text-white lg:text-green"
+                    : "flex flex-col w-full lg:flex lg:flex-row p-4 text-md lg:m-4 rounded-xl bg-slate-200 dark:bg-slate-900 dark:text-white text-black"
                 }
               >
                 <img
@@ -281,7 +281,9 @@ export default function PostList() {
                   src={`${item.featuredImage}`}
                 ></img>
 
-                <div className={isGrid ? " p-1" : "lg:flex lg:flex-col p-3"}>
+                <div
+                  className={`${isGrid ? " p-1" : "lg:flex lg:flex-col p-3"}`}
+                >
                   <span className=" flex font-semibold">
                     {/* {item.tags?.map((item) => (
                 <h3 className=" rounded-md px-1 w-fit m-1">
@@ -289,16 +291,16 @@ export default function PostList() {
                 </h3>
               ))} */}
                   </span>
-                  <div className={isGrid ? " p-1" : "p-4"}>
+                  <div className={isGrid ? " p-1" : "p-2"}>
                     <h1
                       className={
-                        isGrid ? " font-semibold" : "text-xl font-semibold p-3"
+                        isGrid ? " font-semibold" : "text-xl font-semibold pb-3"
                       }
                     >
                       {item.title}
                     </h1>
 
-                    {showAdminOnList && <span className="p-3">👨 Admin</span>}
+                    {showAdminOnList && <span className="">👨 Admin</span>}
 
                     {showDateOnList && (
                       <span className=" p-3">
@@ -310,6 +312,7 @@ export default function PostList() {
                     to={`/blogs/${
                       permalinkType === "title" ? item.slug : item._id
                     }`}
+                    className=" p-2"
                   >
                     <p className=" line-clamp-4">{item.description}</p>
                     <h3 className=" font-semibold">Read More</h3>
