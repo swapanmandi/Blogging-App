@@ -4,7 +4,7 @@ import { Editor } from '@tinymce/tinymce-react';
 
 export default function PostEditor({name, control, defaultValue=""}) {
   
-
+ 
   return (
     <>
     <div>
@@ -13,7 +13,8 @@ export default function PostEditor({name, control, defaultValue=""}) {
           control={control}
           render={({ field }) => (
             <Editor
-              apiKey= {import.meta.VITE_RICH_TEXT_EDITOR_API}
+              apiKey= {import.meta.env.VITE_RICH_TEXT_EDITOR_API}
+            
               initialValue = {defaultValue}
               init={{
                 branding: false,
