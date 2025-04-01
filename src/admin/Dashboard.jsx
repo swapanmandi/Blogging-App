@@ -32,32 +32,37 @@ export default function Dashboard() {
   return (
     <div className=" w-full flex">
       <div className=" relative h-svh w-full flex">
-        <div className="  w-full grid grid-cols-2 gap-4 p-2  h-fit lg:grid lg:grid-cols-5">
-          <div className="  h-20 items-center flex flex-col bg-slate-300  ">
-            <span>All Users</span>
-            <span>{userCount}</span>
+        <div className="  w-full grid grid-cols-2 gap-4 p-2  h-fit lg:grid lg:grid-cols-3">
+          <div className="  h-32 items-center flex flex-col bg-slate-300 rounded-md p-2 gap-4 ">
+            <p className=" font-medium">All Users</p>
+            <p className=" font-medium">{userCount || 0} </p>
           </div>
 
-          <div className=" h-20 items-center flex flex-col bg-slate-300  ">
-            <span>Published Posts</span>
-            <span>{BlogCount?.publishedBlogsCount}</span>
+          <div className=" h-32 items-center flex flex-col gap-4 bg-slate-300 rounded-md p-2  ">
+            <p className=" font-medium">Published Posts</p>
+            <p className=" font-medium">
+              {BlogCount?.publishedBlogsCount || 0}
+            </p>
           </div>
 
-          <div className=" h-20 items-center flex flex-col bg-slate-300 ">
-            <span>Draft Posts</span>
-            <span>
-              {BlogCount?.blogsCount - BlogCount?.publishedBlogsCount}
-            </span>
+          <div className=" h-32 items-center flex flex-col gap-4 bg-slate-300 rounded-md p-2 ">
+            <p className=" font-medium">Draft Posts</p>
+            <p className=" font-medium">
+              {BlogCount?.blogsCount - BlogCount?.publishedBlogsCount || 0}
+            </p>
           </div>
 
-          <div className=" h-20 items-center flex flex-col bg-slate-300 ">
-            <span>Total Comments</span>
-            <span>{CommentCount}</span>
+          <div className=" h-32 items-center flex flex-col gap-4 bg-slate-300 rounded-md p-2 ">
+            <p className=" font-medium">Total Comment</p>
+            <p className=" font-medium">{CommentCount || 0}</p>
           </div>
 
-          <div className=" h-20 items-center flex flex-col bg-slate-300 ">
-            Sort By:
-            <input className=" bg-slate-300 border-2" type="date"></input>
+          <div className=" h-32 items-center flex flex-col gap-4 bg-slate-300 rounded-md p-2 font-medium ">
+            Sort By:{" "}
+            <input
+              className=" bg-slate-300 rounded-md p-2 border-2 outline-none"
+              type="date"
+            ></input>
           </div>
         </div>
       </div>
