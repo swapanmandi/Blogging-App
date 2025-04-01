@@ -31,18 +31,18 @@ export default function Category() {
 
   return (
     <div className=" w-full p-2 flex justify-center">
-      <div className=" bg-orange-300 w-1/2 h-fit flex flex-col items-center rounded-md">
-        <h2 className=" m-2">Add Category</h2>
+      <div className=" bg-orange-300 w-1/2 h-fit flex flex-col items-center rounded-md p-3">
+        <h2 className=" font-medium m-2">Add Category</h2>
         <div className=" w-full flex items-center justify-center">
           <input
-            className=" w-2/4 h-fit text-black bg-slate-400 rounded-sm outline-none p-1"
+            className=" w-2/4 h-fit text-black bg-slate-400 rounded-md outline-none p-1 px-2"
             onChange={handleCategoryInput}
             value={category}
           />
           <button
             type="button"
             onClick={handleAddCategory}
-            className=" bg-red-500 rounded-md p-1 m-2"
+            className=" bg-red-500 rounded-md p-1 m-2 px-2"
           >
             Add
           </button>
