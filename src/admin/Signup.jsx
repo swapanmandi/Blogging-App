@@ -15,27 +15,26 @@ export default function Signup() {
   };
 
   return (
-    <>
-      <div className=" bg-slate-400 h-screen items-center flex justify-center w-screen">
-        <div className=" flex flex-col h-3/6 rounded-sm justify-center items-center text-slate-950 bg-red-400 w-5/12">
-          <h1 className=" m-3">Sign Up Goes Here</h1>
+      <div className=" bg-slate-800 h-screen items-center flex justify-center w-screen">
+        <div className=" flex flex-col h-2/3 rounded-md justify-center items-center text-slate-950 bg-green-400 w-5/12">
+          <h1 className=" font-medium mb-6">Sign Up Goes Here</h1>
           <form
             onSubmit={handleSubmit(handleSignupAdmin)}
             className=" flex flex-col"
           >
             <input
-              className=" m-2 p-1 rounded-md w-64"
-              placeholder="fullName"
+              className=" m-2 p-1 rounded-md w-64 outline-none"
+              placeholder="FullName"
               {...register("fullName", { required: true })}
             />
             <input
-              className=" m-2 p-1 rounded-md w-64"
-              placeholder="email"
+              className=" m-2 p-1 rounded-md w-64 outline-none"
+              placeholder="Email"
               {...register("email", { required: true })}
             />
             <input
-              className=" m-2 p-1 rounded-md w-64"
-              placeholder="password"
+              className=" m-2 p-1 rounded-md w-64 outline-none"
+              placeholder="Password"
               {...register("password", { required: true })}
             />
             <input
@@ -43,7 +42,7 @@ export default function Signup() {
               type="submit"
             ></input>
           </form>
-          <p>
+          <p className=" flex gap-2 pt-2">
             You have a account already. please{" "}
             <Link to="/admin/signin">
               <strong>Signin</strong>
@@ -52,6 +51,5 @@ export default function Signup() {
           <ToastContainer />
         </div>
       </div>
-    </>
   );
 }

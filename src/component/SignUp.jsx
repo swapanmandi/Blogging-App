@@ -13,19 +13,19 @@ export default function SignUp() {
   };
 
   return (
-    <>
+
       <div className=" flex justify-center items-center w-full h-screen">
-        <div className=" bg-green-200 rounded-sm w-1/2 h-3/5 flex  flex-col items-center justify-center">
-          <h2 className=" m-5">Please Sign Up</h2>
+        <div className=" bg-green-200 w-1/2 h-2/3 flex  flex-col items-center justify-center rounded-md">
+          <h2 className=" font-medium m-5">Please Sign Up</h2>
 
           <form
-            className="flex flex-col h-fit w-fit"
+            className="flex flex-col justify-center items-center h-fit w-fit"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <label>
-              Full Name:
+           <label className=" grid grid-cols-3">
+            <p className="flex justify-end items-center">Full Name:</p>
               <input
-                className=" bg-cyan-600 rounded-md w-72 outline-none px-2 m-2"
+                className=" bg-cyan-600 rounded-md w-72 outline-none px-2 py-1 m-2"
                 type="text"
                 {...register("fullName", {
                   required: true,
@@ -35,10 +35,10 @@ export default function SignUp() {
               />
             </label>
 
-            <label>
-              Email:
+           <label className=" grid grid-cols-3">
+            <p className="flex justify-end items-center">Email:</p>
               <input
-                className=" bg-cyan-600 rounded-md w-72 outline-none px-2 m-2"
+                className=" bg-cyan-600 rounded-md w-72 outline-none px-2 py-1 m-2"
                 type="email"
                 {...register("email", {
                   required: true,
@@ -50,21 +50,21 @@ export default function SignUp() {
                 })}
               />
             </label>
-            <label>
-              Password:
+           <label className=" grid grid-cols-3">
+            <p className="flex justify-end items-center">Password:</p>
               <input
-                className=" bg-cyan-600 rounded-md w-72 outline-none px-2 m-2"
+                className=" bg-cyan-600 rounded-md w-72 outline-none px-2 py-1 m-2"
                 {...register("password", { required: true })}
               />
             </label>
             <input
-              className=" bg-cyan-600 rounded-md w-72 outline-none px-2 m-2"
+              className=" bg-cyan-600 rounded-md w-fit outline-none px-2 py-1 m-2"
               type="submit"
             />
           </form>
 
-          <h2 className="m-5">
-            You have already a account. Please{" "}
+          <h2 className=" flex m-5 gap-2">
+            You have already a account. Please
             <Link to={"/signin"}>
               <strong>Sign In</strong>
             </Link>
@@ -77,6 +77,5 @@ export default function SignUp() {
           </h2>
         </div>
       </div>
-    </>
   );
 }

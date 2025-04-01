@@ -22,22 +22,22 @@ export default function Login() {
   }
 
   return (
-    <div className=" bg-slate-400 h-screen items-center flex justify-center w-screen">
-      <div className=" flex flex-col h-3/6 rounded-sm justify-center items-center text-slate-950 bg-red-400 w-5/12">
-        <h1 className=" m-3">LogIn Goes Here</h1>
+    <div className=" bg-slate-800 h-screen items-center flex justify-center w-screen">
+      <div className=" flex flex-col h-3/6 justify-center items-center text-slate-950 bg-green-400 w-5/12 rounded-md">
+        <h1 className=" font-medium m-3">LogIn Goes Here</h1>
         <form
           onSubmit={handleSubmit(handleAdminSignin)}
           className=" flex flex-col"
         >
           <input
-            className=" m-2 p-1 rounded-md w-64"
-            placeholder="email"
+            className=" m-2 p-1 rounded-md w-64 outline-none"
+            placeholder="Email"
             {...register("email", { required: true })}
           />
           <input
-            className=" m-2 p-1 rounded-md w-64"
-            placeholder="password"
-            {...register("password", { required: true })}
+            className=" m-2 p-1 rounded-md w-64 outline-none"
+            placeholder="Password"
+            {...register("Password", { required: true })}
           />
           <input
             className=" m-2 p-1 rounded-md w-64 bg-red-700 text-white"

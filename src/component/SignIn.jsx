@@ -14,51 +14,49 @@ export default function SignIn() {
   };
 
   return (
-    <>
-      <div className="w-full h-screen flex justify-center items-center">
-        <div className="bg-green-200 h-1/2 w-2/4 flex flex-col justify-center items-center">
-          <h2 className=" m-4">Sign In</h2>
-          <form
-            className=" flex flex-col h-fit w-fit"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <label>
-              Email:
-              <input
-                className=" bg-cyan-600 rounded-md w-72 outline-none px-2 m-2"
-                type="email"
-                {...register("email", { required: true })}
-              />
-            </label>
-
-            <label>
-              Password:
-              <input
-                className=" bg-cyan-600 rounded-md w-72 outline-none px-2 m-2"
-                type="text"
-                {...register("password", { required: true })}
-              />
-            </label>
-
+    <div className="w-full h-screen flex justify-center items-center">
+      <div className=" bg-green-200 flex flex-col justify-center items-center  h-2/3 w-2/4 rounded-md py-5">
+        <h2 className=" font-medium pb-5">Sign In</h2>
+        <form
+          className=" flex flex-col justify-center items-center "
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <label className=" grid grid-cols-3">
+            <p className="flex justify-end items-center">Email:</p>
             <input
-              className=" bg-cyan-600 rounded-md w-72 outline-none px-2 m-2"
-              type="submit"
+              className=" bg-cyan-600 rounded-md w-72 outline-none px-2 py-1 m-2"
+              type="email"
+              {...register("email", { required: true })}
             />
-          </form>
-          <h2 className=" m-4">
-            Don't have Account? 
-            <Link to={"/signup"}>
-              <strong> SignUp </strong>here.
-            </Link>
-          </h2>
-          <h2 className="">
-            If you want to publish your blog? 
-            <Link to={"/admin/signup"}>
-              <strong> SignUp </strong>here.
-            </Link>
-          </h2>
-        </div>
+          </label>
+
+          <label className=" grid grid-cols-3">
+            <p className="flex justify-end items-center">Password:</p>
+            <input
+              className=" bg-cyan-600 rounded-md w-72 outline-none px-2 py-1 m-2"
+              type="text"
+              {...register("password", { required: true })}
+            />
+          </label>
+
+          <input
+            className=" bg-cyan-600 rounded-md w-fit outline-none px-2 py-1 m-2"
+            type="submit"
+          />
+        </form>
+        <h2 className=" m-4">
+          Don't have Account?
+          <Link to={"/signup"}>
+            <strong> SignUp </strong>here.
+          </Link>
+        </h2>
+        <h2 className="">
+          If you want to publish your blog?
+          <Link to={"/admin/signup"}>
+            <strong> SignUp </strong>here.
+          </Link>
+        </h2>
       </div>
-    </>
+    </div>
   );
 }
