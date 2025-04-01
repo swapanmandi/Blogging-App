@@ -40,10 +40,10 @@ const Navbar = () => {
       <nav className="flex justify-between items-center lg:px-10  ">
         <Link
           to="/"
-          className=" h-full w-fit items-center font-bold uppercase flex space-x-4 pl-2"
+          className=" h-full w-fit items-center font-bold uppercase flex space-x-4 pl-2 cursor-pointer"
         >
           <img src={siteIcon} className=" w-8 h-8"></img>
-          <h2>BlogPress</h2>
+          <h2 className="">BlogPress</h2>
         </Link>
 
         <div
