@@ -17,7 +17,7 @@ export default function SearchBar() {
   return (
     <div className=" w-full">
       <input
-        className=" h-10 w-full bg-slate-200  rounded-sm outline-none p-2"
+        className=" h-10 w-full bg-slate-300 text-black  rounded-sm outline-none p-2"
         type="text"
         placeholder="search..."
         value={searchInput}
