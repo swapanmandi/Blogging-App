@@ -42,7 +42,7 @@ export default function MainSidebar() {
           </div>
         </div>
       ) : (
-        <aside className=" w-ful p-2 overflow-hidden dark:bg-slate-900 dark:text-white min-h-screen rounded-md ">
+        <aside className=" w-ful p-2 overflow-hidden dark:bg-slate-900 dark:text-white min-h-screen rounded-md text-black">
           <h2 className="  bg-orange-300 font-semibold rounded-md p-1 w-fit">
             Trending Posts
           </h2>
