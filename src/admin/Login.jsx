@@ -37,7 +37,7 @@ export default function Login() {
           <input
             className=" m-2 p-1 rounded-md w-64 outline-none"
             placeholder="Password"
-            {...register("Password", { required: true })}
+            {...register("password", { required: true })}
           />
           <input
             className=" m-2 p-1 rounded-md w-64 bg-red-700 text-white"
